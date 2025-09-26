@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}User Requests{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h3>User: {{ user.first_name }} {{ user.last_name }} ({{ user.email }})</h3>
+  <hr>
+
+  <h4>Login Requests</h4>
+  <table class="table table-bordered">
+    <thead>
+      <tr><th>ID</th><th>Message</th><th>Status</th><th>Created</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      {% for req in login_requests %}
+      <tr>
+        <td>{{ req.request_id }}</td>
+        <td>{{ req.message }}</td>
+        <td>{{ req.status }}</td>
+        <td>{{ req.created_at }}</td>
+        <td>
+          <form method="post" action="{{ url_for('admin.handle_login_request', request_id=req.request_id, action='approve') }}" class="d-inline">
+            <button class="btn btn-sm btn-success">Approve</button>
+          </form>
+          <form method="post" action="{{ url_for('admin.handle_login_request', request_id=req.request_id, action='reject') }}" class="d-inline">
+            <button class="btn btn-sm btn-danger">Reject</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="text-center">No login requests</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h4>Food Requests</h4>
+  <table class="table table-bordered">
+    <thead>
+      <tr><th>ID</th><th>Food Type</th><th>Qty</th><th>Address</th><th>Status</th><th>Created</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+      {% for req in food_requests %}
+      <tr>
+        <td>{{ req.request_id }}</td>
+        <td>{{ req.food_type }}</td>
+        <td>{{ req.quantity }}</td>
+        <td>{{ req.address }}</td>
+        <td>{{ req.status }}</td>
+        <td>{{ req.created_at }}</td>
+        <td>
+          <form method="post" action="{{ url_for('admin.handle_food_request', request_id=req.request_id, action='approve') }}" class="d-inline">
+            <button class="btn btn-sm btn-success">Approve</button>
+          </form>
+          <form method="post" action="{{ url_for('admin.handle_food_request', request_id=req.request_id, action='reject') }}" class="d-inline">
+            <button class="btn btn-sm btn-danger">Reject</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="7" class="text-center">No food requests</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Pending request {% endblock %}
+{% block content %}
+
+
+<div class="container mt-5">
+    <div class="alert alert-warning">
+        <h3>Hello {{ user_name }} 👋</h3>
+        <p>Your account is <b>pending approval</b> by the admin.<br>
+            You’ll be able to access your dashboard once approved.</p>
+    </div>
+    <a href="{{ url_for('auth.logout') }}" class="btn btn-secondary">Logout</a>
+</div>
+{% endblock %}

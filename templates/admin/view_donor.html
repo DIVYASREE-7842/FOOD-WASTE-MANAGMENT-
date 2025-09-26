@@ -1,0 +1,438 @@
+{% extends 'base.html' %}
+{% block title %}Donor Profile{% endblock %}
+
+{% block content %}
+<style>
+  /* =====================
+   Base Page Styles
+   ===================== */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    margin: 0;
+  }
+
+  .container {
+    max-width: 1200px;
+  }
+
+  /* =====================
+   Card Styles
+   ===================== */
+  .card {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  .card-header {
+    background-color: #ff9800;
+    color: #fff;
+    font-weight: 600;
+    text-align: center;
+    font-size: 1.2rem;
+    border-bottom: 2px solid #ffa733;
+  }
+
+  /* =====================
+   Profile Card
+   ===================== */
+  .profile-card {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .profile-card img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 4px solid #ff9800;
+    object-fit: cover;
+    margin-bottom: 15px;
+    margin-left: 100px;
+  }
+
+  .profile-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+  }
+
+  .profile-email {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 10px;
+  }
+
+  .status-badge {
+    background-color: #ffa733;
+    color: #000;
+    font-weight: 500;
+    padding: 0.35rem 0.7rem;
+    border-radius: 8px;
+    display: inline-block;
+    margin-top: 5px;
+  }
+
+  /* =====================
+   Progress Cards
+   ===================== */
+  .progress-card {
+    text-align: center;
+    padding: 20px;
+    border-left: 5px solid #ff9800;
+
+  }
+
+  .progress-card h6 {
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+  }
+
+  .goal-value,
+  .progress-value {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #ff9800;
+  }
+
+  .goal-label,
+  .progress-label {
+    font-size: 0.85rem;
+    color: #555;
+  }
+
+  /* =====================
+   Timeline Card
+   ===================== */
+  .timeline-card {
+    text-align: center;
+    padding: 20px;
+    border-top: 5px solid #ff9800;
+  }
+
+  .timeline-days {
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #333;
+  }
+
+  .timeline-label {
+    font-size: 0.85rem;
+    color: #666;
+  }
+
+  /* =====================
+   Chart Cards
+   ===================== */
+  .analytics-card {
+    padding: 10px;
+    border-top: 5px solid #ff9800;
+    text-align: center;
+  }
+
+  .chart-container {
+    position: relative;
+    height: 280px;
+  }
+
+  /* =====================
+   Map Card
+   ===================== */
+  .map-card {
+    padding: 20px;
+  }
+
+  .map-container {
+    height: 350px;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  /* =====================
+   Section Titles
+   ===================== */
+  .section-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    color: #333;
+  }
+
+  /* =====================
+   Responsive
+   ===================== */
+  @media (max-width: 768px) {
+    .profile-card img {
+      width: 120px;
+      height: 120px;
+    }
+
+    .goal-value,
+    .progress-value {
+      font-size: 1.8rem;
+    }
+
+    .chart-container {
+      height: 150px;
+    }
+
+    .map-container {
+      height: 250px;
+    }
+  }
+</style>
+
+<div class="container mt-5">
+  <!-- Profile + Progress -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card profile-card">
+        {% if donor.user_profile %}
+        <img src="{{ url_for('static', filename='uploads/' ~ donor.user_profile) }}" alt="Profile">
+        {% else %}
+        <img src="{{ url_for('static', filename='images/default.png') }}" alt="Default Profile">
+        {% endif %}
+        <h5 class="profile-name">{{ donor.first_name }} {{ donor.last_name }}</h5>
+        <p class="profile-email">{{ donor.email }}</p>
+        <p><strong>Organization:</strong> {{ donor.org_name }}</p>
+        <p><strong>Type:</strong> {{ donor.org_type }}</p>
+        <p><strong>License:</strong> {{ donor.licience }}</p>
+        <span class="status-badge">{{ donor.status }}</span>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="card progress-card">
+            <h6>Weekly Goal Achieved</h6>
+            <div class="goal-value">{{ donor.total_food_saved or 0 }}</div>
+            <p class="goal-label">kg of food saved</p>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card progress-card">
+            <h6>Weekly Progress</h6>
+            <div class="progress-value">{{ weekly_progress }}%</div>
+            <p class="progress-label">of {{ weekly_target }} units</p>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="card progress-card">
+            <strong>Avg Rating:</strong>
+            <span class="rating-value">{{ donor.avg_rating or 0 }}/5</span>
+            <span class="rating-stars">
+              {% for i in range(5) %}
+              {% if i < (donor.avg_rating or 0)|int %} <i class="fas fa-star"></i>
+                {% else %}
+                <i class="far fa-star"></i>
+                {% endif %}
+                {% endfor %}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Analytics -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="card analytics-card">
+        <h6>Donations by Food Type</h6>
+        <div class="chart-container"><canvas id="foodTypeChart"></canvas></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card analytics-card">
+        <h6>Donations Timeline</h6>
+        <div class="chart-container"><canvas id="donationTimelineChart"></canvas></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card analytics-card">
+        <h6>Avg Rating Per Day</h6>
+        <div class="chart-container"><canvas id="ratingTimelineChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  {% if recipient %}
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="card analytics-card">
+        <h6>Requests Timeline</h6>
+        <div class="chart-container"><canvas id="requestTimelineChart"></canvas></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card analytics-card">
+        <h6>Request Status</h6>
+        <div class="chart-container"><canvas id="statusChart"></canvas></div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card analytics-card">
+        <h6>Recipient Rating</h6>
+        <div class="chart-container"><canvas id="recipientRatingChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card analytics-card">
+        <h6>Food Saved Per Day</h6>
+        <div class="chart-container"><canvas id="foodSavedChart"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Map -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card map-card">
+        <h4 class="section-title">Donor Location</h4>
+        <div id="map" class="map-container"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+  // Multi-color palette
+  const chartColors = [
+    '#FF6B35', '#FFA6007', '#FFB347', '#FFCC80', '#8E8D8A', '#6B5B95', '#003f5c', '#58508d', '#bc5090', '#FF6361'
+  ];
+
+  // Create charts function with extra options for bars & lines
+  function createChart(id, type, labels, data) {
+    const ctx = document.getElementById(id).getContext('2d');
+
+    let options = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 12, padding: 15, font: { size: 11 } } },
+        tooltip: { mode: 'index', intersect: false, padding: 10, cornerRadius: 4 }
+      },
+      scales: {
+        x: {
+          ticks: { color: '#333' },
+          grid: { display: false }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: { color: '#333' },
+          grid: { color: 'rgba(0,0,0,0.05)' }
+        }
+      }
+    };
+
+    let datasetOptions = {
+      data: data,
+      backgroundColor: chartColors.slice(0, data.length),
+      borderRadius: 6,
+      borderSkipped: false
+    };
+
+    if (type === 'line') {
+      datasetOptions = {
+        data: data,
+        borderColor: chartColors[0],
+        backgroundColor: 'rgba(255, 152, 0, 0.1)',
+        tension: 0.4,
+        pointBackgroundColor: chartColors[0],
+        pointBorderColor: '#fff',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+        fill: true
+      };
+    }
+
+    if (type === 'bar') {
+      datasetOptions = {
+        data: data,
+        backgroundColor: chartColors.slice(0, data.length),
+        borderRadius: 6,
+        barPercentage: 0.5,   // make bars thinner
+        categoryPercentage: 0.6
+      };
+    }
+
+    new Chart(ctx, {
+      type: type,
+      data: { labels: labels, datasets: [datasetOptions] },
+      options: options
+    });
+  }
+
+  // Donor Charts
+  createChart("foodTypeChart", "pie", {{ food_labels| tojson }}, {{ food_counts| tojson }});
+  createChart("donationTimelineChart", "bar", {{ donation_labels| tojson }}, {{ donation_counts| tojson }});
+  createChart("ratingTimelineChart", "line", {{ rating_labels| tojson }}, {{ rating_values| tojson }});
+  {% if recipient %}
+  createChart("requestTimelineChart", "bar", {{ request_labels| tojson }}, {{ request_counts| tojson }});
+  createChart("statusChart", "doughnut", {{ status_labels| tojson }}, {{ status_counts| tojson }});
+  createChart("recipientRatingChart", "doughnut", ["Rating", "Remaining"], [{{ recipient_rating or 0 }}, 5 - {{ recipient_rating or 0 }}]);
+  {% endif %}
+  createChart("foodSavedChart", "bar", {{ food_saved_labels| tojson }}, {{ food_saved_counts| tojson }});
+  
+// Leaflet Map
+// const lat = {{ donor.latitude or "null" }};
+// const lng = {{ donor.longitude or "null" }};
+// if (lat && lng) {
+//   var map = L.map('map').setView([lat, lng], 14);
+//   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+//     maxZoom: 19,
+//   }).addTo(map);
+
+//   L.marker([lat, lng]).addTo(map)
+//     .bindPopup("<b>{{ recipient.org_name or recipient.first_name ~ ' ' ~ recipient.last_name }}</b><br>{{ recipient.address }}")
+//     .openPopup();
+// } else {
+//   document.getElementById("map").innerHTML = 
+//     '<div class="no-location"><i class="fas fa-map-marker-alt"></i><p>No location available</p></div>';
+// }
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var donorLat = {{ donor.latitude or 0 }};
+    var donorLng = {{ donor.longitude or 0 }};
+    var donorAddress = {{ donor.address | tojson }};
+    var donorName = {{ donor.org_name | tojson }};
+
+    // Ensure map container is valid
+    var map = L.map('map').setView([donorLat, donorLng], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    L.marker([donorLat, donorLng])
+      .addTo(map)
+      .bindPopup("<b>" + donorName + "</b><br>" + donorAddress)
+      .openPopup();
+
+    // Fix for map not rendering inside Bootstrap cards
+    setTimeout(function () { map.invalidateSize(); }, 100);
+  });
+</script>
+
+
+{% endblock %}

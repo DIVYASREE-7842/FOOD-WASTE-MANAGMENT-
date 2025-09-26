@@ -1,0 +1,424 @@
+{% extends "base.html" %}
+{% block title %}My Donations{% endblock %}
+
+{% block content %}
+<style>
+  /* Custom CSS for My Food Requests Page */
+  :root {
+    --primary-color: #ee9d4d7c;
+    --secondary-color: #fcac68;
+    --dark-color: #2c3e50;
+    --light-color: #f4f7fa;
+    --text-dark: #333;
+    --text-medium: #555;
+    --text-light: #818999;
+    --transition-speed: 0.4s;
+  }
+
+  /* Reset and base styles */
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Card styling */
+  .card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+    border: none;
+    padding: 1.2rem;
+  }
+
+  .card-header h3 {
+    font-weight: 700;
+    font-size: 1.8rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  }
+
+  .card-body {
+    padding: 2rem;
+  }
+
+  /* Table styling */
+  .table-responsive {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .table {
+    margin-bottom: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .table thead th {
+    background: var(--dark-color);
+    color: white;
+    border: none;
+    padding: 1rem;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .table tbody td {
+    padding: 0.9rem;
+    vertical-align: middle;
+    text-align: center;
+    border-color: #eaeef2;
+  }
+
+  .table tbody tr {
+    transition: all var(--transition-speed);
+  }
+
+  .table tbody tr:hover {
+    background-color: rgba(238, 157, 77, 0.1);
+    transform: scale(1.01);
+  }
+
+  /* Badge styling */
+  .badge {
+    padding: 0.5rem 0.8rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+
+  .bg-warning {
+    background: linear-gradient(135deg, #ffc107, #ff9800) !important;
+    color: #000 !important;
+  }
+
+  .bg-success {
+    background: linear-gradient(135deg, #28a745, #20c997) !important;
+  }
+
+  .bg-danger {
+    background: linear-gradient(135deg, #dc3545, #fd7e14) !important;
+  }
+
+  .bg-secondary {
+    background: linear-gradient(135deg, #6c757d, #868e96) !important;
+  }
+
+  /* Button styling */
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all var(--transition-speed);
+    border: none;
+  }
+
+  .btn-success {
+    background: linear-gradient(135deg, var(--secondary-color), var(--secondary-color));
+    box-shadow: 0 4px 8px rgba(238, 157, 77, 0.3);
+  }
+
+  .btn-success:hover {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(238, 157, 77, 0.4);
+  }
+
+  .btn-danger {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+  }
+
+  .btn-danger:hover {
+    background: linear-gradient(135deg, #c82333, #dc3545);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(220, 53, 69, 0.4);
+  }
+
+  /* Pagination styling */
+  .pagination {
+    margin: 1.5rem 0;
+  }
+
+  .page-item {
+    margin: 0 0.2rem;
+  }
+
+  .page-link {
+    color: var(--dark-color);
+    border: 1px solid var(--secondary-color);
+    border-radius: 5px;
+    padding: 0.5rem 0.9rem;
+    transition: all var(--transition-speed);
+  }
+
+  .page-link:hover {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border-color: var(--secondary-color);
+  }
+
+  .page-item.active .page-link {
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    border-color: var(--secondary-color);
+    color: white;
+  }
+
+  /* Text center */
+  .text-center {
+    margin-top: 1.5rem;
+  }
+
+  .text-muted {
+    font-size: 1.1rem;
+    padding: 1.5rem 0;
+  }
+
+  /* Animation for table rows */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .table tbody tr {
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  .table tbody tr:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+
+  .table tbody tr:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .table tbody tr:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+
+  .table tbody tr:nth-child(4) {
+    animation-delay: 0.4s;
+  }
+
+  .table tbody tr:nth-child(5) {
+    animation-delay: 0.5s;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 992px) {
+    .table-responsive {
+      overflow-x: auto;
+    }
+
+    .table thead th {
+      font-size: 0.9rem;
+      padding: 0.8rem 0.5rem;
+    }
+
+    .table tbody td {
+      font-size: 0.85rem;
+      padding: 0.7rem 0.5rem;
+    }
+
+    .btn {
+      font-size: 0.8rem;
+      padding: 0.4rem 0.8rem;
+    }
+  }
+
+  @media (max-width: 576px) {
+    body {
+      padding: 10px;
+    }
+
+    .card-body {
+      padding: 1rem;
+    }
+
+    .card-header h3 {
+      font-size: 1.4rem;
+    }
+
+    .text-muted {
+      font-size: 1rem;
+    }
+  }
+</style>
+<div class="container my-5">
+  <div class="card shadow-lg">
+    <div class="card-header bg-primary text-white text-center">
+      <h3 class="mb-0">My Donations</h3>
+    </div>
+    <div class="card-body">
+      {% if donations %}
+      <table class="table table-bordered table-striped">
+        <thead class="table-light">
+          <tr>
+            <th>S.NO</th>
+            <th>Food Type</th>
+            <th>Quantity</th>
+            <th>Status</th>
+            <th>Description</th>
+            <th>Prepared At</th>
+            <th>Expired At</th>
+            <th>Created</th>
+            <th>Update</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for d in donations %}
+          <tr id="donation-{{ d.donation_id }}">
+            <td>{{ (page - 1) * per_page + loop.index }}</td>
+            <td>{{ d.food_type }}</td>
+            <td>{{ d.quantity }}</td>
+            <td>{{ d.status }}</td>
+            <td>{{ d.description or '-' }}</td>
+            <td>{{ d.prepared_at or '-' }}</td>
+            <td>{{ d.expired_at or '-' }}</td>
+            <td>{{ d.prepared_at }}</td>
+            <td>
+              
+              {% if d.status=='OPEN'%}
+                <button type="submit" class="btn btn-sm btn-success complete-btn " data-id="{{d.donation_id}}">Completed</button>
+         
+              {% endif %}
+            </td>
+            
+            <td>
+              
+              <button type="button" class="btn btn-sm btn-danger delete-btn" data-id="{{ d.donation_id }}">
+                Delete
+              </button>
+             
+            </td>
+
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+
+      <nav>
+        <ul class="pagination justify-content-center">
+          {% if page > 1 %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page-1 }}">Previous</a>
+          </li>
+          {% endif %}
+
+          {% for p in range(1, total_pages+1) %}
+          <li class="page-item {% if p == page %}active{% endif %}">
+            <a class="page-link" href="?page={{ p }}">{{ p }}</a>
+          </li>
+          {% endfor %}
+
+          {% if page < total_pages %} <li class="page-item">
+            <a class="page-link" href="?page={{ page+1 }}">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+      </nav>
+
+      {% else %}
+      <p class="text-center text-muted">No requests yet.</p>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+
+
+<script>
+  document.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.addEventListener("click", function () {
+      const donationId = this.dataset.id;
+      console.log("Deleting donation:", donationId); // 🔹 Debug
+
+      if (!donationId) {
+        alert("Error: No donation ID found");
+        return;
+      }
+
+      if (!confirm("Are you sure you want to delete this donation?")) return;
+
+      fetch(`/donor/donations/delete/${donationId}`, {
+        method: "POST",
+        headers: { "X-Requested-With": "XMLHttpRequest" }
+      })
+        .then(res => {
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          return res.json();
+        })
+        .then(data => {
+          console.log("Delete response:", data);
+          if (data.success) {
+            document.getElementById(`donation-${donationId}`).remove();
+            alert(data.message);
+          } else {
+            alert("Error: " + data.message);
+          }
+        })
+        .catch(err => console.error("Delete failed:", err));
+    });
+  });
+</script>
+<!-- complete -->
+<script>
+document.querySelectorAll(".complete-btn").forEach(btn => {
+  btn.addEventListener("click", function () {
+    const donationId = this.getAttribute("data-id");
+    console.log("Completing donation:", donationId);
+
+    // Correct fetch URL with blueprint prefix
+    fetch(`/donor/donation/${donationId}/complete`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "X-Requested-With": "XMLHttpRequest" }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return res.json();
+      })
+      .then(data => {
+        console.log("Complete response:", data);
+        if (data.success) {
+          alert("✅ " + data.message);
+
+          // Update status cell in table
+          const row = document.getElementById(`donation-${donationId}`);
+          if (row) row.querySelector("td:nth-child(4)").innerText = "COMPLETED";
+
+          this.innerText = "Completed";
+          this.disabled = true;
+          this.classList.remove("btn-success");
+          this.classList.add("btn-secondary");
+        } else {
+          alert("⚠️ " + data.message);
+        }
+      })
+      .catch(err => console.error("Error:", err));
+  });
+});
+</script>
+
+
+{% endblock %}

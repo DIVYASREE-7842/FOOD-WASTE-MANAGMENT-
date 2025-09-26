@@ -1,0 +1,36 @@
+{% exytends 'base.html' %}
+{% block title %}Request {% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <h2>User Requests</h2>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Email</th>
+        <th>Message</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in requests %}
+      <tr>
+        <td>{{ r.first_name }} {{ r.last_name }}</td>
+        <td>{{ r.email }}</td>
+        <td>{{ r.message }}</td>
+        <td>{{ r.status }}</td>
+        <td>
+          {% if r.status == "Pending" %}
+          <a href="{{ url_for('admin.approve_request', user_id=r.user_id) }}" class="btn btn-success btn-sm">Approve</a>
+          <a href="{{ url_for('admin.reject_request', user_id=r.user_id) }}" class="btn btn-danger btn-sm">Reject</a>
+          {% else %}
+          <span class="badge bg-info">{{ r.status }}</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

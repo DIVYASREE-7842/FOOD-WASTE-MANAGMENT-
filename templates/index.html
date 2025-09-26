@@ -1,0 +1,595 @@
+{% extends "base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    crossorigin="anonymous">
+<link rel="stylesheet" href="{{url_for('static',filename='assets/css/style.css')}}">
+
+<style>
+    .ap-home-hero {
+        background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+        url('{{url_for("static", filename="assets/images/curosil/cor-1.jpg")}}');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 100px 0;
+        margin-bottom: 40px;
+        border-radius: 10px;
+    }
+
+    /* Fix unwanted thin lines under carousel indicators */
+    .carousel-indicators button {
+        border: none !important;
+    }
+    /* Global Styles */
+.main-content {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-dark);
+    line-height: 1.6;
+    background-color: var(--light-color);
+  
+}
+
+.ap-section-title {
+    color: var(--dark-color);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    position: relative;
+    
+}
+
+.ap-section-title:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: var(--secondary-color);
+    border-radius: 2px;
+}
+
+/* Hero Section with Carousel */
+.ap-carousel-item {
+    height: 400px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+ 
+}
+
+
+.ap-carousel-caption {
+    bottom: 50%;
+    transform: translateY(50%);
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    animation: fadeIn 1s ease-in-out;
+}
+
+.ap-quote-icon {
+    font-size: 2rem;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+}
+
+.ap-carousel-caption h3 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.ap-carousel-caption p {
+    font-style: italic;
+    color: var(--light-color);
+    font-size: 1.1rem;
+}
+
+.carousel-control-prev, .carousel-control-next {
+    width: 50px;
+    height: 50px;
+    background: var(--secondary-color);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.8;
+    transition: all var(--transition-speed);
+}
+
+.carousel-control-prev {
+    left: 20px;
+}
+
+.carousel-control-next {
+    right: 20px;
+}
+
+.carousel-control-prev:hover, .carousel-control-next:hover {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-indicators button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0 5px;
+    background-color: var(--light-color);
+    border: none;
+    transition: all var(--transition-speed);
+}
+
+.carousel-indicators button.active {
+    background-color: var(--secondary-color);
+    transform: scale(1.3);
+}
+
+/* Mission Section */
+.ap-mission-section {
+    padding: 80px 0;
+    background-color: white;
+}
+
+.ap-mission-section .lead {
+    font-size: 1.25rem;
+    color: var(--text-medium);
+    margin-bottom: 1.5rem;
+}
+
+.ap-mission-section p {
+    margin-bottom: 1.5rem;
+    color: var(--text-medium);
+}
+
+.ap-mission-section img {
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    transition: all var(--transition-speed);
+}
+
+.ap-mission-section img:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* Stats Section */
+.ap-stat-box {
+    background: white;
+    padding: 30px 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    transition: all var(--transition-speed);
+    position: relative;
+    overflow: hidden;
+   
+}
+
+.ap-stat-box:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 0;
+    background: var(--secondary-color);
+    transition: all var(--transition-speed);
+}
+
+.ap-stat-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+   
+}
+
+.ap-stat-box:hover:before {
+    height: 100%;
+}
+
+.ap-stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--dark-color);
+    margin-bottom: 0.5rem;
+    transition: all var(--transition-speed);
+  
+}
+
+.ap-stat-box:hover .ap-stat-number {
+    color: var(--secondary-color);
+   
+}
+
+.ap-stat-box p {
+    color: var(--text-medium);
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Food Waste Management Section */
+.ap-feature-card {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    transition: all var(--transition-speed);
+    height: 100%;
+}
+
+.ap-feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.ap-feature-icon {
+    font-size: 3rem;
+    color: var(--secondary-color);
+    margin-bottom: 1.5rem;
+    transition: all var(--transition-speed);
+}
+
+.ap-feature-card:hover .ap-feature-icon {
+    transform: scale(1.1);
+    color: var(--dark-color);
+}
+
+.ap-feature-card .card-title {
+    color: var(--dark-color);
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.ap-feature-card .card-text {
+    color: var(--text-medium);
+    margin-bottom: 1.5rem;
+}
+
+/* Buttons */
+.ap-btn-primary, .ap-btn-outline-primary {
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all var(--transition-speed);
+    text-decoration: none;
+    display: inline-block;
+    border: 2px solid var(--secondary-color);
+    text-align: center;
+}
+
+.ap-btn-primary {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.ap-btn-primary:hover {
+    background: var(--dark-color);
+    border-color: var(--dark-color);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.ap-btn-outline-primary {
+    background: transparent;
+    color: var(--secondary-color);
+}
+
+.ap-btn-outline-primary:hover {
+    background: var(--secondary-color);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Call to Action Section */
+.ap-cta-section {
+    background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+    color: white;
+    padding: 80px 0;
+}
+
+.ap-cta-section h2 {
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.ap-cta-section .lead {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 0;
+}
+
+.ap-cta-section .btn {
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all var(--transition-speed);
+}
+
+.ap-cta-section .btn-light {
+    background: white;
+    color: var(--dark-color);
+    border: 2px solid white;
+}
+
+.ap-cta-section .btn-light:hover {
+    background: transparent;
+    color: white;
+    transform: translateY(-3px);
+}
+
+.ap-cta-section .btn-outline-light {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+.ap-cta-section .btn-outline-light:hover {
+    background: white;
+    color: var(--dark-color);
+    transform: translateY(-3px);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .ap-carousel-caption h3 {
+        font-size: 1.5rem;
+    }
+    
+    .ap-carousel-caption {
+        padding: 20px;
+    }
+    
+    .ap-stat-number {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .ap-home-hero, .ap-mission-section, .ap-cta-section {
+        padding: 60px 0;
+    }
+    
+    .ap-carousel-item {
+        height: 350px;
+    }
+    
+    .ap-carousel-caption h3 {
+        font-size: 1.3rem;
+    }
+    
+    .ap-carousel-caption p {
+        font-size: 1rem;
+    }
+    
+    .ap-cta-section .text-lg-end {
+        text-align: left !important;
+        margin-top: 20px;
+    }
+    
+    .ap-cta-section .btn {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .ap-carousel-item {
+        height: 300px;
+    }
+    
+    .ap-carousel-caption {
+        bottom: 40%;
+        transform: translateY(40%);
+    }
+    
+    .ap-stat-box {
+        margin-bottom: 20px;
+    }
+}
+</style>
+
+<!-- Main content -->
+<div class="main-content no-sidebar">
+    <!-- Hero Section with Carousel -->
+    <section class="ap-home-hero">
+        <div class="container">
+            <div id="apQuoteCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#apQuoteCarousel" data-bs-slide-to="0"
+                        class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#apQuoteCarousel" data-bs-slide-to="1"
+                        aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#apQuoteCarousel" data-bs-slide-to="2"
+                        aria-label="Slide 3"></button>
+                    <button type="button" data-bs-target="#apQuoteCarousel" data-bs-slide-to="3"
+                        aria-label="Slide 4"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item ap-carousel-item active">
+                        <div class="carousel-caption ap-carousel-caption d-none d-md-block">
+                            <div class="ap-quote-icon"><i class="fas fa-quote-left"></i></div>
+                            <h3>"Food waste is a tragedy that we can prevent. Donating surplus food is not charity, it's responsibility."</h3>
+                            <p>- James Smith, Food Security Expert</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item ap-carousel-item">
+                        <div class="carousel-caption ap-carousel-caption d-none d-md-block">
+                            <div class="ap-quote-icon"><i class="fas fa-quote-left"></i></div>
+                            <h3>"When we donate food, we're not just feeding the hungry, we're nourishing communities and reducing our environmental footprint."</h3>
+                            <p>- Sustainable Food Network</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item ap-carousel-item">
+                        <div class="carousel-caption ap-carousel-caption d-none d-md-block">
+                            <div class="ap-quote-icon"><i class="fas fa-quote-left"></i></div>
+                            <h3>"The professional management of food donations ensures that surplus becomes sustenance, and waste becomes worth."</h3>
+                            <p>- Dr. Maria Rodriguez, Food Policy Advisor</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item ap-carousel-item">
+                        <div class="carousel-caption ap-carousel-caption d-none d-md-block">
+                            <div class="ap-quote-icon"><i class="fas fa-quote-left"></i></div>
+                            <h3>"Effective food waste management begins with prevention, continues with donation, and ends with recycling - in that order."</h3>
+                            <p>- Environmental Protection Agency Guidelines</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#apQuoteCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#apQuoteCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="ap-mission-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2 class="ap-section-title">Our Mission</h2>
+                    <p class="lead">To reduce food waste and fight hunger by creating efficient connections between food
+                        donors, recipients, and waste management services.</p>
+                    <p>We believe that no quality food should go to waste while people in our communities face hunger.
+                        Our platform facilitates the professional donation process while ensuring food safety and maximizing environmental benefits through proper waste management.</p>
+                    <p>By leveraging technology and building strong partnerships, we create sustainable solutions that benefit both people and the planet.</p>
+                    <button class="ap-btn-primary mt-3">Learn More About Us</button>
+                </div>
+                <div class="col-lg-6">
+                    <img src="{{url_for('static',filename='assets/images/curosil/cor-2.jpg')}}"
+                        alt="Food donation volunteers" class="img-fluid rounded">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col">
+                <h2 class="ap-section-title">The Impact of Food Waste</h2>
+            </div>
+        </div>
+        <div class="row">
+            <!-- Active Donors -->
+            <div class="col-md-4 col-6">
+                <a href="{{ url_for('auth.register') }}" class="text-decoration-none">
+                    <div class="ap-stat-box">
+                        <div class="ap-stat-number">{{ active_donors or 0 }}</div>
+                        <p>Active Donors</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Active Recipients -->
+            <div class="col-md-4 col-6">
+                <a href="{{ url_for('auth.register') }}" class="text-decoration-none">
+                    <div class="ap-stat-box">
+                        <div class="ap-stat-number">{{ active_recipients or 0}}</div>
+                        <p>Active Recipients</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Available Food -->
+            <div class="col-md-4 col-6">
+                <a href="{{ url_for('auth.register') }}" class="text-decoration-none">
+                    <div class="ap-stat-box">
+                        {% for row in saved_data[-1:] %}
+                        <div class="ap-stat-number">{{ row.total_saved or 0 }} Kg</div>
+                        {% endfor %}
+                        <p>Available Food</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Food Waste Management Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col text-center">
+                    <h2 class="ap-section-title">Food Waste Management Solutions</h2>
+                    <p class="lead">Our comprehensive approach to reducing food waste</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card ap-feature-card">
+                        <div class="card-body text-center p-4">
+                            <div class="ap-feature-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                            <h4 class="card-title">Food Donation</h4>
+                            <p class="card-text">We connect food businesses with surplus food to charities and people in need, following all safety regulations.</p>
+                            <a href="{{url_for('auth.login_page')}}" class="ap-btn-outline-primary">Donate Food</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card ap-feature-card">
+                        <div class="card-body text-center p-4">
+                            <div class="ap-feature-icon"><i class="fas fa-recycle"></i></div>
+                            <h4 class="card-title">Composting</h4>
+                            <p class="card-text">We help businesses and communities set up composting systems to turn food waste into nutrient-rich soil.</p>
+                            <a href="{{url_for('auth.login_page')}}" class="ap-btn-outline-primary">Request Food</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card ap-feature-card">
+                        <div class="card-body text-center p-4">
+                            <div class="ap-feature-icon"><i class="fas fa-chart-line"></i></div>
+                            <h4 class="card-title">Waste Analytics</h4>
+                            <p class="card-text">Our tracking tools help businesses understand their waste patterns and implement reduction strategies.</p>
+                            <a href="{{ url_for('auth.login_page') }}" class="ap-btn-outline-primary">Explore Analytics</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="ap-cta-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h2>Join Us in the Fight Against Food Waste</h2>
+                    <p class="lead">Whether you're a business with surplus food or an individual who wants to make a difference, we have opportunities for you to get involved.</p>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <a href="{{ url_for('auth.login_page') }}" class="btn btn-light me-2">Donate Food</a>
+                    <a href="{{ url_for('auth.login_page') }}" class="btn btn-outline-light">Food Request</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+{% endblock %}

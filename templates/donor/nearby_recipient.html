@@ -1,0 +1,60 @@
+<!-- Nearby Recipients Card -->
+<div class="stat-card card-yellow shadow-lg text-center p-3"
+     style="cursor:pointer; border-radius: 15px;"
+     data-bs-toggle="modal" data-bs-target="#nearbyRecipientsModal">
+  <div class="icon-wrapper mb-2">
+    <i class="fas fa-map-marker-alt fa-3x text-danger"></i>
+  </div>
+  <h6 class="fw-bold text-dark">Nearby Recipients</h6>
+  <h3 class="text-primary">{{ nearby_recipients_count or 0 }}</h3>
+  <p class="text-muted small">Click to view details</p>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="nearbyRecipientsModal" tabindex="-1" aria-labelledby="nearbyRecipientsLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content rounded-4 shadow">
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title fw-bold" id="nearbyRecipientsLabel">
+          <i class="fas fa-users me-2"></i>Nearby Recipients
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        {% if nearby_recipients %}
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="table-dark">
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Address</th>
+                  <th>Contact</th>
+                  <th>Distance (km)</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for recipient in nearby_recipients %}
+                  <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ recipient.last_name }}</td>
+                    <td>{{ recipient.city }}</td>
+                    <td>{{ recipient.phone }}</td>
+                    <td>{{ "%.2f"|format(recipient.distance) }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% else %}
+          <p class="text-muted text-center">🚫 No nearby recipients found.</p>
+        {% endif %}
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

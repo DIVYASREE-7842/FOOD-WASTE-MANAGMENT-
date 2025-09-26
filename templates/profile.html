@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %} User Profile {% endblock %}
+
+{% block content %}
+<style>
+  body {
+    background: #f8f9fa;
+    font-family: Arial, sans-serif;
+  }
+
+  .profile-card {
+    max-width: 750px;
+    margin: 30px auto;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0px 5px 15px rgba(0,0,0,0.1);
+    padding: 30px;
+  }
+
+  .profile-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ddd;
+    margin-bottom: 15px;
+  }
+
+  .btn-update {
+    background-color: #ef8829;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .btn-update:hover {
+    background-color: #d66c14;
+  }
+</style>
+
+<div class="profile-card text-center">
+  <!-- Profile Photo -->
+  <img src="{{ url_for('static', filename='uploads/' ~ user.user_profile) }}" 
+       alt="Profile Photo" class="profile-photo">
+
+  <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+  <p class="text-muted">{{ user.role }}</p>
+
+  <hr>
+
+  <div class="row text-left">
+    <div class="col-md-6">
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Phone:</strong> {{ user.phone }}</p>
+      <p><strong>Country:</strong> {{ user.country }}</p>
+      <p><strong>State:</strong> {{ user.state }}</p>
+      <p><strong>City:</strong> {{ user.city }}</p>
+    </div>
+    <div class="col-md-6">
+      <p><strong>Organization Name:</strong> {{ user.organization_name }}</p>
+      <p><strong>Organization Type:</strong> {{ user.organization_type }}</p>
+      <p><strong>Address:</strong> {{ user.address }}</p>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Update Button -->
+  <form action="{{ url_for('recipient.update_profile') }}" method="GET">
+    <button type="submit" class="btn-update">Update Profile</button>
+  </form>
+</div>
+{% endblock %}

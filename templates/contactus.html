@@ -1,0 +1,418 @@
+{% extends'base.html' %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    /* ===== CONTACT PAGE STYLES ===== */
+    /* These styles will only apply to the contact page */
+
+    /* Hero section styling */
+    .hero {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+        color: white;
+        text-align: center;
+        padding: 80px 20px;
+        margin-bottom: 40px;
+    }
+
+    .hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+
+    .hero p {
+        font-size: 1.2rem;
+        max-width: 700px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+
+    /* Contact container layout */
+    .contact-container {
+        background-color: var(--light-color);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        padding: 20px;
+        margin-bottom: 60px;
+    }
+
+    /* Contact information styling */
+    .contact-info h2 {
+        color: var(--dark-color);
+        margin-bottom: 25px;
+        font-size: 1.8rem;
+        position: relative;
+        padding-bottom: 10px;
+    }
+
+    .contact-info h2:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: var(--secondary-color);
+    }
+
+    .info-item {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 10px;
+    }
+
+    .info-item i {
+        font-size: 1.5rem;
+        color: var(--secondary-color);
+        margin-right: 15px;
+        min-width: 25px;
+        text-align: center;
+    }
+
+    .info-item h3 {
+        color: var(--dark-color);
+        margin-bottom: 5px;
+        font-size: 1.1rem;
+    }
+
+    .info-item p {
+        color: var(--text-medium);
+        line-height: 1.5;
+    }
+
+   
+
+    /* Contact form styling */
+    .contact-form {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .contact-form h2 {
+        color: var(--dark-color);
+        margin-bottom: 25px;
+        font-size: 1.8rem;
+        position: relative;
+        padding-bottom: 10px;
+    }
+
+    .contact-form h2:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: var(--secondary-color);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--dark-color);
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        border-color: var(--secondary-color);
+        box-shadow: 0 0 0 0.2rem rgba(252, 172, 104, 0.25);
+        outline: none;
+    }
+
+    .form-group textarea {
+        min-height: 150px;
+        resize: vertical;
+    }
+
+    .contact-form button {
+        background: var(--secondary-color);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+    }
+
+    .contact-form button:hover {
+        background: #eb8740;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .status-message {
+        margin-top: 20px;
+        padding: 10px;
+        border-radius: 6px;
+        text-align: center;
+        display: none;
+    }
+
+    .status-message.success {
+        background: #d4edda;
+        color: #155724;
+        display: block;
+    }
+
+    .status-message.error {
+        background: #f8d7da;
+        color: #721c24;
+        display: block;
+    }
+
+    /* Responsive design for contact page */
+    @media (max-width: 992px) {
+        .contact-container {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .hero {
+            padding: 60px 20px;
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .hero {
+            padding: 40px 15px;
+        }
+
+        .hero h1 {
+            font-size: 1.8rem;
+        }
+
+        .hero p {
+            font-size: 1rem;
+        }
+
+        .contact-container {
+            padding: 10px;
+        }
+
+        .contact-form {
+            padding: 20px;
+        }
+    }
+
+    /* Animation for form elements */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .contact-form {
+        animation: fadeInUp 0.6s ease;
+    }
+
+    .info-item {
+        animation: fadeInUp 0.6s ease;
+    }
+
+    .info-item:nth-child(2) {
+        animation-delay: 0.1s;
+    }
+
+    .info-item:nth-child(3) {
+        animation-delay: 0.2s;
+    }
+
+    .info-item:nth-child(4) {
+        animation-delay: 0.3s;
+    }
+
+    .info-item:nth-child(5) {
+        animation-delay: 0.4s;
+    }
+</style>
+</head>
+<section class="hero">
+    <div class="container">
+        <h1>Get in Touch With Us</h1>
+        <p>We'd love to hear from you! Whether you have a question about our services, pricing, or anything else, our
+            team is ready to answer all your questions.</p>
+    </div>
+</section>
+
+<div class="container contact-container">
+    <div class="contact-info">
+        <h2>Contact Information</h2>
+        <div class="info-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <div>
+                <h3>Address</h3>
+                <p>123 Food Street, City, State 12345</p>
+            </div>
+        </div>
+        <div class="info-item">
+            <i class="fas fa-phone"></i>
+            <div>
+                <h3>Phone</h3>
+                <p>(123) 456-7890</p>
+            </div>
+        </div>
+        <div class="info-item">
+            <i class="fas fa-envelope"></i>
+            <div>
+                <h3>Email</h3>
+                <p>info@nourishtoflourish.com</p>
+            </div>
+        </div>
+        <div class="info-item">
+            <i class="fas fa-clock"></i>
+            <div>
+                <h3>Business Hours</h3>
+                <p>Monday-Friday: 9am - 6pm</p>
+                <p>Saturday: 10am - 4pm</p>
+                <p>Sunday: Closed</p>
+            </div>
+        </div>
+        <div class="card  my-4">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-map-marked-alt me-2" style=" 
+        background: var(--light-color);
+        border-radius: 8px;
+        font-size: 1.5rem;
+        color: var(--secondary-color);"></i> Location Map
+                </h5>
+            </div>
+            <div class="card-body text-center">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3868.4646750237803!2d77.80865137579926!3d14.167540386269094!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bb164c9aeb0e7a7%3A0x646a31653e49acdb!2sVasavi%20Nivas!5e0!3m2!1sen!2sin!4v1758192961131!5m2!1sen!2sin"
+                    width="100%" height="350" style="border:0; border-radius: 10px;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+    <div class="contact-form">
+        <h2>Send Us a Message</h2>
+        <form id="contactForm">
+            <div class="form-group">
+                <label for="name">Your Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone">
+            </div>
+            <div class="form-group">
+                <label for="subject">Subject</label>
+                <input type="text" id="subject" name="subject" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Your Message</label>
+                <textarea id="message" name="message" required></textarea>
+            </div>
+            <button type="submit">Send Message</button>
+        </form>
+        <div id="statusMessage" class="status-message"></div>
+    </div>
+</div>
+
+
+
+<script>
+    document.getElementById('contactForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Basic form validation
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const subject = document.getElementById('subject').value;
+        const message = document.getElementById('message').value;
+
+        if (!name || !email || !subject || !message) {
+            showStatus('Please fill in all required fields.', 'error');
+            return;
+        }
+
+        // Email validation
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailPattern.test(email)) {
+            showStatus('Please enter a valid email address.', 'error');
+            return;
+        }
+
+        // If validation passes, simulate form submission
+        simulateFormSubmission();
+    });
+
+    function simulateFormSubmission() {
+        // In a real implementation, this would be an AJAX call to the server
+        showStatus('Thank you for your message! We will get back to you soon.', 'success');
+        document.getElementById('contactForm').reset();
+
+        // In a real scenario, you would send the data to the server with code like:
+
+        const formData = new FormData(document.getElementById('contactForm'));
+
+        fetch('submit_contact.php', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showStatus('Thank you for your message! We will get back to you soon.', 'success');
+                    document.getElementById('contactForm').reset();
+                } else {
+                    showStatus('There was an error sending your message. Please try again.', 'error');
+                }
+            })
+            .catch(error => {
+                showStatus('There was an error sending your message. Please try again.', 'error');
+            });
+
+    }
+
+    function showStatus(message, type) {
+        const statusElement = document.getElementById('statusMessage');
+        statusElement.textContent = message;
+        statusElement.className = 'status-message ' + type;
+
+        // Hide status message after 5 seconds
+        setTimeout(() => {
+            statusElement.style.display = 'none';
+        }, 5000);
+    }
+</script>
+{% endblock %}

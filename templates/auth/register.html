@@ -1,0 +1,623 @@
+{% extends 'base.html' %}
+{% block title %}Register - Aprycot{% endblock %}
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+  crossorigin="anonymous">
+  <style>
+    /* sign up  */
+body {
+    background: #fdeee7;
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+    margin: 0;
+}
+
+.main-wrapper {
+    max-width: 1100px;
+    margin: 32px auto 0 auto;
+    border-radius: 32px;
+    background: #fff;
+    box-shadow: 0 8px 32px rgba(195,114,66,0.14);
+    display: flex;
+    overflow: hidden;
+}
+
+.signup-area {
+    flex: 1.2;
+    padding: 10px 30px 30px 30px;
+    min-width: 200px;
+}
+
+.header-signup {
+    font-size: 1.25rem;
+    margin: 14px 0 8px 0;
+    color: #23395d;
+    font-family: 'Segoe UI', 'Arial';
+    font-weight: 600;
+}
+
+.signup-area form {
+    margin-top: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.form-row input[type="text"]{
+    flex: 1;
+}
+
+.signup-area input[type="text"],
+.signup-area input[type="email"],
+.signup-area input[type="tel"],
+.signup-area input[type="password"],
+.signup-area input[type="file"],
+.signup-area input[type="number"],
+.signup-area select,
+.signup-area textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border-radius: 7px;
+    border: 1px solid #dedede;
+    background: #f4f7fa;
+    font-size: 1rem;
+    transition: border-color .2s;
+    outline: none;
+}
+
+.signup-area input:focus,
+.signup-area select:focus,
+.signup-area textarea:focus
+.signup-area input[type="file"]:focus { 
+    border-color: #fcac68; 
+}
+
+.agree {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    font-size: .97rem;
+    color: #818999;
+}
+
+.signup-btn {
+    width: 100%;
+    background: #fcac68;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    padding: 10px 0;
+    margin-bottom: 18px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background .2s;
+}
+
+.signup-btn:hover {
+    background: #eb8740;
+}
+
+.or-social {
+    margin: 14px 0 10px 0;
+    text-align: center;
+    color: #818999;
+    font-size: .97rem;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.social-icons img {
+    width: 28px; 
+    height: 28px; 
+    border-radius: 50%; 
+    box-shadow: 0 2px 10px rgba(200,140,70,0.15);
+    cursor: pointer; 
+    transition: box-shadow .2s;
+}
+
+.social-icons img:hover { 
+    box-shadow: 0 6px 16px rgba(200,140,70,0.22); 
+}
+
+.signin-link {
+    text-align: center;
+    color: #23395d;
+    font-size: 1rem;
+    margin-top: 6px;
+}
+
+.signin-link a { 
+    color: #e46b14; 
+    font-weight: 500; 
+    text-decoration: none; 
+    transition: color .2s; 
+}
+
+.signin-link a:hover { 
+    color: #d0660d; 
+}
+
+.food-img {
+    position: absolute;
+    width: 100px; 
+    height: 100px;
+    border-radius: 50%;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.13), 0 1.5px 7px rgba(197, 108, 45, 0.07);
+    transition: transform .10s cubic-bezier(.46,1.34,.71,1.17), box-shadow .5s;
+    z-index: 2;
+    cursor: pointer;
+    background: #fff;
+    border: 3.5px solid #fff;
+}
+
+.food-img:hover {
+    transform: scale(1.20) rotate(16deg);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.18);
+    z-index: 3;
+}
+
+ label {
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 0px;
+    color: #7c512c;
+} 
+
+.images-section {
+    flex: 1.2;
+    background: #ee9d4d7c;
+    min-width: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.images-circle {
+    position: relative;
+    width: 430px;
+    height: 430px;
+    background: rgba(249, 237, 221, 0.12);
+    border-radius: 50%;
+}
+
+.dotted {
+    position: absolute;
+    top: 0;
+    left: -15px;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2.5px dashed #fa820e;
+    opacity: .52;
+    pointer-events: none;
+    box-sizing: border-box;
+}
+
+.food-img.pos1 {
+    left: 55px;
+    top: 2px;
+}
+
+.food-img.pos2 {
+    left: 343px;
+    top: 47px;
+}
+
+.food-img.pos3 {
+    left: 340px;
+    top: 250px;
+}
+
+.food-img.pos4 {
+    left: 218px;
+    top: 377px;
+}
+
+.food-img.pos5 {
+    left: 17px;
+    top: 300px;
+}
+
+.food-img.central {
+    width: 160px;
+    height: 160px;
+    left: 145px;
+    top: 140px;
+    z-index: 4;
+    border: 6px solid #fa820e;
+}
+
+@media screen and (max-width:800px) {
+    .main-wrapper { 
+        flex-direction: column; 
+        margin: 20px;
+    }
+    .signup-area { 
+        padding: 30px 18px; 
+    }
+}
+
+@media (max-width: 991px) {
+    .main-wrapper {
+        flex-direction: column;
+    }
+    .images-section {
+        margin-top: 30px;
+        justify-content: center;
+        min-height: 400px;
+    }
+}
+</style>
+
+<div class="main-wrapper mb-5">
+  <!-- Left Column: Signup Form -->
+  <div class="signup-area">
+    <div class="header-signup">Sign Up</div>
+    <div style="color:#818999; margin-bottom:15px;">Create your Aprycot account.</div>
+
+    <form method="POST" action="{{ url_for('auth.register') }}" enctype="multipart/form-data">
+  <input type="hidden" id="latitude" name="latitude">
+  <input type="hidden" id="longitude" name="longitude">
+
+  <!-- STEP 1: Basic Info -->
+  <div id="step1">
+    <h3>Basic Info</h3>
+    <div class="form-row">
+      <input type="text" name="firstname" placeholder="Full Name" value="{{ request.form.get('firstname','') }}" required>
+      <input type="text" name="lastname" placeholder="Last Name" value="{{ request.form.get('lastname','') }}" required>
+    </div>
+
+    <div class="form-row">
+      <input type="email" name="email" placeholder="Email" value="{{ request.form.get('email','') }}" required>
+      <input type="tel" name="phone" placeholder="Phone No." value="{{ request.form.get('phone','') }}" required>
+    </div>
+
+    <div class="form-row">
+      <select name="country" id="country" required>
+        <option value="">Select Country</option>
+      </select>
+      <select name="state" id="state" required disabled>
+        <option value="">Select State</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <select name="city" id="city" disabled>
+        <option value="">Select City</option>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label><input type="checkbox" id="role_donor" name="roles" value="Donor"> Donor</label>
+      <label><input type="checkbox" id="role_recipient" name="roles" value="Recipient"> Recipient</label>
+    </div>
+
+    <div class="form-row">
+      <div style="position: relative; flex:1;">
+        <input type="password" id="password" name="password" placeholder="Password" required>
+        <button type="button" class="toggle-password" data-target="password"
+          style="position:absolute;right:8px;top:20%;border:none;background:none;cursor:pointer;">
+          <i class="fa fa-eye"></i>
+        </button>
+      </div>
+      <div style="position: relative; flex:1;">
+        <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm Password" required>
+        <button type="button" class="toggle-password" data-target="confirm_password"
+          style="position:absolute;right:8px;top:20%;border:none;background:none;cursor:pointer;">
+          <i class="fa fa-eye"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <input type="file" name="profile_photo" accept="image/*" required style="flex:1">
+      <input type="text" name="zipcode" placeholder="Zipcode" value="{{ request.form.get('zipcode','') }}">
+    </div>
+
+    <div class="form-row">
+      <textarea name="address" placeholder="Address" required>{{ request.form.get('address','') }}</textarea>
+    </div>
+
+    <button type="button" class="signup-btn" onclick="nextStep()">Next</button>
+  </div>
+
+  <!-- STEP 2: Professional Info -->
+  <div id="step2" style="display:none;">
+    <h3>Professional Details</h3>
+
+    <!-- Common fields for Donor/Recipient -->
+    <label for="licence">Licence:</label>
+    <input type="file" id="licence" name="licence" accept="image/*,application/pdf">
+
+    <label for="org_name">Organization Name:</label>
+    <input type="text" id="org_name" name="org_name" placeholder="Organization Name">
+
+    <label for="org_type">Organization Type:</label>
+    <select id="org_type" name="org_type">
+      <option value="">Select Type</option>
+      <option value="RESTAURANT">Restaurant</option>
+      <option value="HOTEL">Hotel</option>
+      <option value="HOUSEHOLD">Household</option>
+      <option value="EVENT">Event</option>
+      <option value="NGO">NGO</option>
+      <option value="Food Banks">Food Bank</option>
+      <option value="Individuals">Individual</option>
+      <option value="Shelters">Shelter</option>
+    </select>
+
+    <label for="org_profile">Organization Profile Photo:</label>
+    <input type="file" id="org_profile" name="org_profile" accept="image/*">
+
+    <label for="description">Description</label>
+    <textarea id="description" name="description" placeholder="Organization Description"></textarea>
+
+    <!-- Recipient-only fields -->
+    <div id="recipient-extra" style="display:none; margin-top:15px;">
+      <h4>Recipient Extra Details</h4>
+
+      <label for="tax_proof">Tax Payment Bill:</label>
+      <input type="file" id="tax_proof" name="tax_proof" accept="image/*,application/pdf">
+
+      <label for="food_safety_licience">Food Safety Licence:</label>
+      <input type="file" id="food_safety_licience" name="food_safety_licience" accept="image/*,application/pdf">
+
+      <label for="address_proof">Address Proof:</label>
+      <input type="file" id="address_proof" name="address_proof" accept="image/*,application/pdf">
+
+      <label for="org_capacity">Organization Capacity:</label>
+      <input type="number" id="org_capacity" name="org_capacity" placeholder="Capacity">
+    </div>
+
+    <div class="form-row">
+      <button type="button" class="signup-btn" onclick="prevStep()">Back</button>
+      <button type="submit" class="signup-btn">Sign Up</button>
+    </div>
+  </div>
+</form>
+
+
+    <div class="or-social mt-3">or sign in with other accounts?</div>
+    <div class="social-icons">
+      <img src="{{url_for('static',filename='assets/images/brands/08.png')}}" alt="Facebook" />
+      <img src="{{url_for('static',filename='assets/images/brands/10.png')}}" alt="Instagram" />
+      <img src="{{url_for('static',filename='assets/images/brands/13.png')}}" alt="LinkedIn" />
+    </div>
+
+    <div class="signin-link mt-2">
+      Already have an Account <a href="{{ url_for('auth.login_page') }}">Login</a>
+    </div>
+  </div>
+
+
+  <!-- Images Section -->
+  <!-- Right Column: Image Section -->
+  <div class="images-section">
+    <div class="images-circle">
+      <div class="dotted"></div>
+      <img src="{{url_for('static',filename='assets/images/layouts/37.png')}}" class="food-img pos1" alt="food1">
+      <img src="{{url_for('static',filename='assets/images/layouts/33.png')}}" class="food-img pos2" alt="food2">
+      <img src="{{url_for('static',filename='assets/images/layouts/30.png')}}" class="food-img pos3" alt="food3">
+      <img src="{{url_for('static',filename='assets/images/layouts/35.png')}}" class="food-img pos4" alt="food4">
+      <img src="{{url_for('static',filename='assets/images/layouts/36.png')}}" class="food-img pos5" alt="food5">
+      <img src="{{url_for('static',filename='assets/images/layouts/32.png')}}" class="food-img central"
+        alt="food-central">
+    </div>
+  </div>
+</div>
+
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+<script>
+  // ===============================
+  // Password Toggle Function
+  // ===============================
+  document.querySelectorAll('.toggle-password').forEach(button => {
+    button.addEventListener('click', function () {
+      const targetId = this.getAttribute('data-target');
+      const input = document.getElementById(targetId);
+      if (!input) return;
+
+      if (input.type === 'password') {
+        input.type = 'text';
+      } else {
+        input.type = 'password';
+      }
+
+      // Toggle icon
+      const icon = this.querySelector('i');
+      icon.classList.toggle('fa-eye');
+      icon.classList.toggle('fa-eye-slash');
+    });
+  });
+
+  // ===============================
+  // Country / State / City Dropdowns
+  // ===============================
+  async function loadCountries() {
+    const countrySelect = document.getElementById('country');
+    const stateSelect = document.getElementById('state');
+    const citySelect = document.getElementById('city');
+
+    if (!countrySelect) return;
+    try {
+      const response = await fetch('/auth/api/countries');
+      const countries = await response.json();
+      countrySelect.innerHTML = '<option value="">Select Country</option>';
+      countries.forEach(c => {
+        const option = document.createElement('option');
+        option.value = c.iso2;
+        option.textContent = c.name;
+        countrySelect.appendChild(option);
+      });
+      countrySelect.disabled = false;
+    } catch (error) {
+      console.error('Error loading countries:', error);
+    }
+  }
+
+  async function loadStates(countryCode) {
+    const stateSelect = document.getElementById('state');
+    const citySelect = document.getElementById('city');
+    if (!stateSelect || !countryCode) return;
+
+    try {
+      const response = await fetch(`/auth/api/countries/${countryCode}/states`);
+      const states = await response.json();
+      stateSelect.innerHTML = '<option value="">Select State</option>';
+      states.forEach(s => {
+        const option = document.createElement('option');
+        option.value = s.iso2;
+        option.textContent = s.name;
+        stateSelect.appendChild(option);
+      });
+      stateSelect.disabled = false;
+      if (citySelect) citySelect.disabled = true;
+    } catch (error) {
+      console.error('Error loading states:', error);
+    }
+  }
+
+  async function loadCities(countryCode, stateCode) {
+    const citySelect = document.getElementById('city');
+    if (!citySelect || !countryCode || !stateCode) return;
+
+    try {
+      const response = await fetch(`/auth/api/countries/${countryCode}/states/${stateCode}/cities`);
+      const cities = await response.json();
+      citySelect.innerHTML = '<option value="">Select City</option>';
+      cities.forEach(c => {
+        const option = document.createElement('option');
+        option.value = c.id;
+        option.textContent = c.name;
+        citySelect.appendChild(option);
+      });
+      citySelect.disabled = false;
+    } catch (error) {
+      console.error('Error loading cities:', error);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    loadCountries();
+    const countrySelect = document.getElementById('country');
+    const stateSelect = document.getElementById('state');
+
+    countrySelect?.addEventListener('change', function () {
+      loadStates(this.value);
+    });
+    stateSelect?.addEventListener('change', function () {
+      const countryVal = countrySelect.value;
+      if (countryVal) loadCities(countryVal, this.value);
+    });
+  });
+</script>
+
+<script>
+  // =========================
+  // Fetch Lat/Lon via Nominatim
+  // =========================
+  async function getLatLon(city, state, country) {
+    const query = `${city}, ${state}, ${country}`;
+    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`;
+
+    try {
+      const response = await fetch(url, {
+        headers: {
+          "User-Agent": "aprycot-app (your@email.com)" // Required by Nominatim
+        }
+      });
+
+      const data = await response.json();
+
+      if (data.length > 0) {
+        const latitude = data[0].lat;
+        const longitude = data[0].lon;
+
+        console.log(`✅ Found: ${query}`);
+        console.log("Latitude:", latitude, "Longitude:", longitude);
+
+        // update hidden fields
+        document.getElementById('latitude').value = latitude;
+        document.getElementById('longitude').value = longitude;
+      } else {
+        console.warn("❌ Location not found");
+        document.getElementById('latitude').value = '';
+        document.getElementById('longitude').value = '';
+      }
+    } catch (error) {
+      console.error("⚠️ Error fetching location:", error);
+    }
+  }
+
+  // =========================
+  // Trigger geocoding after selecting City
+  // =========================
+  document.addEventListener('DOMContentLoaded', function () {
+    const countrySelect = document.getElementById('country');
+    const stateSelect = document.getElementById('state');
+    const citySelect = document.getElementById('city');
+
+    citySelect?.addEventListener('change', function () {
+      const country = countrySelect.options[countrySelect.selectedIndex]?.text || "";
+      const state = stateSelect.options[stateSelect.selectedIndex]?.text || "";
+      const city = citySelect.options[citySelect.selectedIndex]?.text || "";
+
+      if (country && state && city) {
+        getLatLon(city, state, country);
+      }
+    });
+  });
+</script>
+
+<script>
+  function nextStep() {
+    document.getElementById("step1").style.display = "none";
+    document.getElementById("step2").style.display = "block";
+    toggleRecipientExtra();
+  }
+  function prevStep() {
+    document.getElementById("step2").style.display = "none";
+    document.getElementById("step1").style.display = "block";
+  }
+  function toggleRecipientExtra() {
+    const recipientCheck = document.getElementById("role_recipient");
+    const recipientExtra = document.getElementById("recipient-extra");
+    recipientExtra.style.display = recipientCheck.checked ? "block" : "none";
+  }
+  document.getElementById("role_recipient").addEventListener("change", toggleRecipientExtra);
+</script>
+<script>
+  function nextStep() {
+    // Check if at least one role is selected
+    const donorCheck = document.getElementById("role_donor");
+    const recipientCheck = document.getElementById("role_recipient");
+    
+    if (!donorCheck.checked && !recipientCheck.checked) {
+      alert("Please select at least one role (Donor or Recipient) to continue.");
+      return;
+    }
+    
+    document.getElementById("step1").style.display = "none";
+    document.getElementById("step2").style.display = "block";
+    toggleRecipientExtra();
+  }
+</script>
+
+{% endblock %}

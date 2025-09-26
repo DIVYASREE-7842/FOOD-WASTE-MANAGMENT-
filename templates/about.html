@@ -1,0 +1,430 @@
+{% extends "base.html" %}
+{% block title %} About Us {% endblock %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<style>
+    /* Unique CSS for About Us page only */
+    .ap-about-hero {
+        background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+                   url('{{url_for("static", filename="assets/images/curosil/cor-1.jpg")}}');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 120px 0px;
+        margin-bottom: 50px;
+        border-radius: 10px;
+        text-align: center;
+    }
+    
+    .ap-about-section {
+        padding: 60px 0;
+    }
+    
+    .ap-about-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #2c3e50;
+        position: relative;
+    }
+    
+    .ap-about-title::after {
+        content: '';
+        display: block;
+        width: 80px;
+        height: 4px;
+        background: #fcac68;
+        margin: 15px 0;
+    }
+    
+    .ap-about-center .ap-about-title::after {
+        margin: 15px auto;
+    }
+    
+    .ap-about-values {
+        background-color: #f4f7fa;
+        padding: 80px 0;
+        border-radius: 10px;
+    }
+    
+    .ap-about-value-card {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        height: 100%;
+        transition: transform 0.3s ease;
+        border-top: 4px solid #ee9d4d7c;
+    }
+    
+    .ap-about-value-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    
+    .ap-about-value-icon {
+        font-size: 2.5rem;
+        color: #fcac68;
+        margin-bottom: 20px;
+    }
+    
+    .ap-about-team {
+        padding: 80px 0;
+    }
+    
+    .ap-about-team-member {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .ap-about-team-img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 15px;
+        border: 5px solid #f4f7fa;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .ap-about-timeline {
+        position: relative;
+        padding: 60px 0;
+        background-color: #f4f7fa;
+        border-radius: 10px;
+    }
+    
+    .ap-about-timeline::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: #fcac68;
+        transform: translateX(-50%);
+    }
+    
+    .ap-about-timeline-item {
+        position: relative;
+        margin-bottom: 40px;
+        width: 45%;
+    }
+    
+    .ap-about-timeline-item:nth-child(odd) {
+        left: 0;
+    }
+    
+    .ap-about-timeline-item:nth-child(even) {
+        left: 55%;
+    }
+    
+    .ap-about-timeline-content {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        border-left: 4px solid #ee9d4d7c;
+    }
+    
+    .ap-about-timeline-date {
+        font-weight: bold;
+        color: #fcac68;
+        margin-bottom: 10px;
+    }
+    
+    .ap-about-cta {
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                   url('{{url_for("static", filename="assets/images/curosil/cor-2.jpg")}}');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 80px 0;
+        text-align: center;
+        border-radius: 10px;
+        margin: 60px 0;
+    }
+    
+    .ap-about-stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #fcac68;
+        margin-bottom: 10px;
+    }
+    
+    .btn-primary {
+        background-color: #fcac68;
+        border-color: #fcac68;
+    }
+    
+    .btn-primary:hover {
+        background-color: #ee9d4d;
+        border-color: #ee9d4d;
+    }
+    
+    .btn-outline-light:hover {
+        background-color: #fcac68;
+        border-color: #fcac68;
+        color: white;
+    }
+    
+    @media (max-width: 768px) {
+        .ap-about-hero {
+            padding: 80px 0;
+        }
+        
+        .ap-about-title {
+            font-size: 2rem;
+        }
+        
+        .ap-about-timeline::before {
+            left: 30px;
+        }
+        
+        .ap-about-timeline-item {
+            width: 100%;
+            padding-left: 70px;
+            padding-right: 25px;
+        }
+        
+        .ap-about-timeline-item:nth-child(odd),
+        .ap-about-timeline-item:nth-child(even) {
+            left: 0;
+        }
+    }
+</style>
+
+<!-- Main content -->
+<div class="main-content no-sidebar">
+    <h1>About us</h1>
+    <!-- Hero Section -->
+    <section class="ap-about-hero">
+        <div class="container">
+            <h1 class="display-4 fw-bold">About Our Mission</h1>
+            <p class="lead">Connecting surplus food with those in need while reducing environmental impact</p>
+        </div>
+    </section>
+
+    <!-- Our Story Section -->
+    <section class="ap-about-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h2 class="ap-about-title">Our Story</h2>
+                    <p class="lead">Founded in 2020, our platform emerged from a simple observation: massive food waste coexisting with widespread hunger.</p>
+                    <p>Our founders, a group of environmental scientists and software developers, recognized the need for a technological solution that could bridge the gap between food donors and recipients while ensuring proper food safety protocols.</p>
+                    <p>What started as a local initiative in one community has now grown into a nationwide network of food donors, recipients, and waste management professionals working together to create a more sustainable food ecosystem.</p>
+                </div>
+                <div class="col-lg-6">
+                    <img src="{{url_for('static',filename='assets/images/curosil/cor-3.jpg')}}" 
+                         alt="Our team working together" class="img-fluid rounded shadow" style="width:600px;height:350px;">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row text-center mb-5">
+                <div class="col">
+                    <h2 class="ap-about-title ap-about-center">Our Impact</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 col-6 text-center mb-4">
+                    <div class="ap-about-stat-number">5,280+</div>
+                    <p>Meals Donated</p>
+                </div>
+                <div class="col-md-3 col-6 text-center mb-4">
+                    <div class="ap-about-stat-number">128</div>
+                    <p>Partner Organizations</p>
+                </div>
+                <div class="col-md-3 col-6 text-center mb-4">
+                    <div class="ap-about-stat-number">12,500+</div>
+                    <p>Kg of Food Saved</p>
+                </div>
+                <div class="col-md-3 col-6 text-center mb-4">
+                    <div class="ap-about-stat-number">15</div>
+                    <p>Cities Served</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Values Section -->
+    <section class="ap-about-values">
+        <div class="container">
+            <div class="row text-center mb-5">
+                <div class="col">
+                    <h2 class="ap-about-title ap-about-center">Our Values</h2>
+                    <p class="lead">The principles that guide everything we do</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="ap-about-value-card">
+                        <div class="ap-about-value-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h4>Compassion</h4>
+                        <p>We believe that no one should go hungry when there is surplus food available. Our work is driven by empathy for those facing food insecurity.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="ap-about-value-card">
+                        <div class="ap-about-value-icon">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h4>Sustainability</h4>
+                        <p>We're committed to reducing the environmental impact of food waste through responsible donation, composting, and recycling practices.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="ap-about-value-card">
+                        <div class="ap-about-value-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4>Safety & Quality</h4>
+                        <p>We maintain the highest standards of food safety, ensuring that all donated food meets quality requirements and is handled properly.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="ap-about-value-card">
+                        <div class="ap-about-value-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <h4>Collaboration</h4>
+                        <p>We believe that solving complex problems requires partnership between businesses, nonprofits, governments, and communities.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="ap-about-value-card">
+                        <div class="ap-about-value-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4>Innovation</h4>
+                        <p>We continuously seek new technologies and approaches to improve the efficiency and impact of food recovery and waste reduction.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="ap-about-value-card">
+                        <div class="ap-about-value-icon">
+                            <i class="fas fa-balance-scale"></i>
+                        </div>
+                        <h4>Transparency</h4>
+                        <p>We operate with openness about our processes, impacts, and challenges, building trust with all stakeholders.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Team Section -->
+    <section class="ap-about-team">
+        <div class="container">
+            <div class="row text-center mb-5">
+                <div class="col">
+                    <h2 class="ap-about-title ap-about-center">Our Leadership Team</h2>
+                    <p class="lead">The passionate individuals driving our mission forward</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="ap-about-team-member">
+                        <img src="{{url_for('static',filename='assets/images/order-history/01.png')}}" 
+                             alt="Team Member" class="ap-about-team-img">
+                        <h4 styles="">Divyasree</h4>
+                        <p class="text-muted">CEO & Founder</p>
+                        <p>Former environmental scientist with 15 years of experience in sustainability initiatives.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="ap-about-team-member">
+                        <img src="{{url_for('static',filename='assets/images/order-history/03.png')}}" 
+                             alt="Team Member" class="ap-about-team-img">
+                        <h4>Lahari</h4>
+                        <p class="text-muted">CTO</p>
+                        <p>Software engineer specializing in platform solutions for social impact organizations.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="ap-about-team-member">
+                        <img src="{{url_for('static',filename='assets/images/menu/1.png')}}" 
+                             alt="Team Member" class="ap-about-team-img">
+                        <h4>Praveen</h4>
+                        <p class="text-muted">Director</p>
+                        <p>Expert in building collaborations between corporate, nonprofit, and government sectors.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="ap-about-timeline">
+        <div class="container">
+            <div class="row text-center mb-5">
+                <div class="col">
+                    <h2 class="ap-about-title ap-about-center">Our Journey</h2>
+                    <p class="lead">Key milestones in our development</p>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="ap-about-timeline-item">
+                        <div class="ap-about-timeline-content">
+                            <div class="ap-about-timeline-date">January 2020</div>
+                            <h4>Platform Concept</h4>
+                            <p>Initial idea development and market research began, identifying the need for a comprehensive food donation solution.</p>
+                        </div>
+                    </div>
+                    <div class="ap-about-timeline-item">
+                        <div class="ap-about-timeline-content">
+                            <div class="ap-about-timeline-date">June 2020</div>
+                            <h4>First Prototype</h4>
+                            <p>Launched our minimum viable product with 10 local restaurants and 5 recipient organizations in our pilot city.</p>
+                        </div>
+                    </div>
+                    <div class="ap-about-timeline-item">
+                        <div class="ap-about-timeline-content">
+                            <div class="ap-about-timeline-date">March 2021</div>
+                            <h4>Expansion</h4>
+                            <p>Secured funding to expand to three additional cities and developed our mobile applications for donors and recipients.</p>
+                        </div>
+                    </div>
+                    <div class="ap-about-timeline-item">
+                        <div class="ap-about-timeline-content">
+                            <div class="ap-about-timeline-date">January 2022</div>
+                            <h4>National Recognition</h4>
+                            <p>Received the National Sustainability Award for innovation in food waste reduction.</p>
+                        </div>
+                    </div>
+                    <div class="ap-about-timeline-item">
+                        <div class="ap-about-timeline-content">
+                            <div class="ap-about-timeline-date">Present</div>
+                            <h4>Ongoing Impact</h4>
+                            <p>Currently operating in 15 cities with over 500 partner organizations and thousands of individual users.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="ap-about-cta">
+        <div class="container">
+            <h2 class="display-5 fw-bold mb-4">Join Our Movement</h2>
+            <p class="lead mb-4">Be part of the solution to food waste and hunger in your community</p>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg me-3">Sign Up Now</a>
+            <a href="{{ url_for('contact') }}" class="btn btn-outline-light btn-lg">Contact Us</a>
+        </div>
+    </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" 
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" 
+        crossorigin="anonymous"></script>
+{% endblock %}

@@ -1,0 +1,560 @@
+{% extends "base.html" %}
+{% block title %}{{ user.frist_name }} Update Account{% endblock %}
+
+{% block content %}
+<style>
+  /* Custom CSS for Update Profile Page */
+  :root {
+    --primary-color: #ee9d4d7c;
+    --secondary-color: #fcac68;
+    --dark-color: #2c3e50;
+    --light-color: #f4f7fa;
+    --text-dark: #333;
+    --text-medium: #555;
+    --text-light: #818999;
+    --transition-speed: 0.4s;
+  }
+
+  /* Reset and base styles */
+
+
+  .container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  /* Card styling */
+  .card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+    border: none;
+    padding: 1.2rem;
+  }
+
+  .card-header h3 {
+    font-weight: 700;
+    font-size: 1.8rem;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    color: var(--dark-color);
+  }
+
+  .card-body {
+    padding: 2rem;
+  }
+
+  /* Form styling */
+  form {
+    color: var(--text-dark);
+  }
+
+  .form-label {
+    color: var(--dark-color);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-label small {
+    font-weight: 500;
+    color: var(--text-medium);
+  }
+
+  .form-control,
+  .form-select {
+    border: 1px solid #dce1e6;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    transition: all var(--transition-speed);
+    color: var(--text-dark);
+  }
+
+  .form-control:focus,
+  .form-select:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.25rem rgba(252, 172, 104, 0.25);
+  }
+
+  .form-control::placeholder {
+    color: var(--text-light);
+  }
+
+  /* Profile image */
+  .profile-img {
+    border: 4px solid var(--secondary-color);
+    transition: all var(--transition-speed);
+    object-fit: cover;
+  }
+
+  .profile-img:hover {
+    transform: scale(1.05);
+    border-color: var(--primary-color);
+  }
+
+  /* Button styling */
+  .btn {
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all var(--transition-speed);
+    border: none;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+    box-shadow: 0 4px 8px rgba(238, 157, 77, 0.3);
+    color: var(--dark-color);
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(238, 157, 77, 0.4);
+    color: var(--dark-color);
+  }
+
+  .btn-light {
+    background: var(--light-color);
+    color: var(--text-dark);
+    border: 2px solid var(--text-light);
+  }
+
+  .btn-light:hover {
+    background: var(--text-light);
+    color: white;
+    border-color: var(--text-light);
+    transform: translateY(-2px);
+  }
+
+  /* Section headings */
+  h5.border-bottom {
+    color: var(--dark-color);
+    font-weight: 700;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--secondary-color) !important;
+  }
+
+  /* File input styling */
+  input[type="file"] {
+    padding: 0.5rem;
+  }
+
+  input[type="file"]::file-selector-button {
+    background: var(--secondary-color);
+    color: var(--dark-color);
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    margin-right: 1rem;
+    font-weight: 600;
+    transition: all var(--transition-speed);
+  }
+
+  input[type="file"]::file-selector-button:hover {
+    background: var(--primary-color);
+  }
+
+  /* Textarea styling */
+  textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  /* Hidden inputs */
+  input[type="hidden"] {
+    display: none;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .row.g-3 {
+      margin: 0 -0.5rem;
+    }
+
+    .col-md-6,
+    .col-md-4,
+    .col-12 {
+      padding: 0 0.5rem;
+    }
+
+    .btn {
+      margin-bottom: 0.5rem;
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 576px) {
+    body {
+      padding: 10px;
+    }
+
+    .card-body {
+      padding: 1rem;
+    }
+
+    .card-header h3 {
+      font-size: 1.5rem;
+    }
+
+    .profile-img {
+      width: 100px !important;
+      height: 100px !important;
+    }
+
+    .form-control,
+    .form-select {
+      padding: 0.6rem 0.8rem;
+    }
+  }
+
+  /* Animation for form elements */
+  .form-control,
+  .form-select,
+  .btn {
+    transition: all var(--transition-speed);
+  }
+
+  /* Focus states for accessibility */
+  .form-control:focus,
+  .form-select:focus,
+  .btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(252, 172, 104, 0.3);
+  }
+</style>
+<div class="container mt-5 d-flex justify-content-center">
+  <div class="card shadow-lg border-0 rounded-3" style="max-width: 900px; width: 100%;">
+    <div class="card-header bg-primary text-white text-center py-3">
+      <h3 class="mb-0"><i class="fas fa-user-edit me-2"></i>Update Account</h3>
+    </div>
+
+    <div class="card-body p-4">
+      <form action="{{ url_for('recipient.update_profile') }}" method="POST" enctype="multipart/form-data" class="row g-3">
+        <input type="hidden" id="latitude" name="latitude" value="{{ user.latitude }}">
+        <input type="hidden" id="longitude" name="longitude" value="{{ user.longitude }}">
+
+        <!-- Profile Photo -->
+        <div class="text-center mb-4 col-12">
+          {% if user.user_profile %}
+          <img src="{{ url_for('static', filename='uploads/' ~ user.user_profile) }}" alt="Profile Photo"
+            class="rounded-circle shadow-sm mb-2 profile-img" style="width:120px;height:120px; object-fit:cover;">
+          {% else %}
+          <img src="https://via.placeholder.com/120" alt="Profile Photo"
+            class="rounded-circle shadow-sm mb-2 profile-img">
+          {% endif %}
+          <div>
+            <label class="form-label"><strong>Profile Photo (optional)</strong></label>
+            <input type="file" name="profile_photo" class="form-control">
+          </div>
+        </div>
+
+        <!-- Name -->
+        <div class="col-md-6">
+          <label class="form-label"><strong>First name</strong></label>
+          <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}" required>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label"><strong>Last name</strong></label>
+          <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">
+        </div>
+
+        <!-- Email -->
+
+        <!-- Phone -->
+        <div class="col-md-6">
+          <label class="form-label"><strong>Phone</strong></label>
+          <input type="tel" name="phone" class="form-control" value="{{ user.phone or '' }}" required>
+        </div>
+
+        <!-- Country / State / City -->
+        <div class="col-12">
+          <label class="form-label"><strong>Location</strong></label>
+          <div class="row">
+            <div class="col-md-4">
+              <label class="form-label"><small>Country</small></label>
+              <select name="country_code" id="country" class="form-select mb-2" required>
+                {% if user.country %}
+                <option value="{{ user.country }}">{{ country_name or user.country }}</option>
+                {% else %}
+                <option value="">Select Country</option>
+                {% endif %}
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label"><small>State</small></label>
+              <select name="state_code" id="state" class="form-select mb-2" required>
+                {% if user.state %}
+                <option value="{{ user.state }}">{{ state_name or user.state }}</option>
+                {% else %}
+                <option value="">Select State</option>
+                {% endif %}
+              </select>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label"><small>City</small></label>
+              <select name="city_id" id="city" class="form-select mb-2" required>
+                {% if user.city %}
+                <option value="{{ user.city }}">{{ city_name or user.city }}</option>
+                {% else %}
+                <option value="">Select City</option>
+                {% endif %}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- ZIP Code -->
+        <div class="col-md-6">
+          <label class="form-label"><strong>ZIP Code</strong></label>
+          <input type="text" name="zip_code" class="form-control" value="{{ user.zip_code or '' }}">
+        </div>
+
+        <!-- Address -->
+        <div class="col-12">
+          <label class="form-label"><strong>Address</strong></label>
+          <textarea name="address" class="form-control" rows="2">{{ user.address or '' }}</textarea>
+        </div>
+
+        <!-- ================= ROLE BASED FIELDS ================= -->
+        {% if 'Donor' in role %}
+        <div class="col-md-6">
+          <label class="form-label"><strong>Organization Name</strong></label>
+          <input type="text" name="org_name" class="form-control" value="{{ donor_profile['org_name'] if donor_profile else '' }}">
+        </div>
+
+        <div class="col-md-6">
+          <label for="org_type" class="form-label">Organization Type</label>
+          <select id="org_type" name=" org_type" class="form-select">
+            {% for type in ['NGO','Food Banks','Individuals','Shelters','RESTAURANT','HOTEL','HOUSEHOLD','EVENT'] %}
+            <option value="{{ type }}" {% if donor_profile and donor_profile['org_type']==type %}selected{% endif %}>{{
+              type }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-mb-6">
+          <label for="licience" class="form-label">Licence</label>
+          <input type="file" name="licence" id="licience" class="form-control">
+          {% if donor_profile and donor_profile['licience'] %}
+          Current File: <a href="{{ url_for('static', filename='uploads/' + donor_profile['licience']) }}"
+            target="_blank">{{ donor_profile['licience'] }}</a>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        {% if 'Recipient' in role %}
+        <div class="col-md-6">
+          <label class="form-label" id="org_name"><strong>Organization Name</strong></label>
+          <input type="text"id="org_name" name="org_name" value="{{ recipient_profile['org_name'] if recipient_profile else '' }}" class="form-control">
+        </div>
+
+        <div class="col-md-6">
+          <label for="org_type" class="form-label">Organization Type</label>
+          <select name="org_type" class="form-select">
+            {% for type in ['NGO','Food Banks','Individuals','Shelters','RESTAURANT','HOTEL','HOUSEHOLD','EVENT'] %}
+            <option value="{{ type }}" {% if recipient_profile and recipient_profile['org_type']==type %}selected{%
+              endif %}>{{ type }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-mb-6">
+          <label for="tax" class="form-label">Tax proof</label>
+          <input type="file" name="tax_proof" class="form-control">
+          {% if recipient_profile and recipient_profile['tax_proof'] %}
+          Current File: <a href="{{ url_for('static', filename='uploads/' + recipient_profile['tax_proof']) }}"
+            target="_blank">{{ recipient_profile['tax_proof'] }}</a>
+          {% endif %}
+        </div>
+
+        <div class="col-mb-6">
+          <label for="licenec" class="form-label">Licence</label>
+          <input type="file" name="food_safety_licience" class="form-control">
+          {% if recipient_profile and recipient_profile['food_safety_licience'] %}
+          Current File: <a
+            href="{{ url_for('static', filename='uploads/' + recipient_profile['food_safety_licience']) }}"
+            target="_blank">{{ recipient_profile['food_safety_licience'] }}</a>
+          {% endif %}
+        </div>
+
+        <div class="col-mb-6">
+          <label for="addresss" class="form-label">Address</label>
+          <input type="file" name="address_proof" class="form-control">
+          {% if recipient_profile and recipient_profile['address_proof'] %}
+          Current File: <a href="{{ url_for('static', filename='uploads/' + recipient_profile['address_proof']) }}"
+            target="_blank">{{ recipient_profile['address_proof'] }}</a>
+          {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Password Update -->
+    <div class="col-12 mt-4">
+      <h5 class="border-bottom pb-2">Change Password (optional)</h5>
+      <input type="password" name="old_password" class="form-control mb-2" placeholder="Old Password">
+      <input type="password" name="new_password" class="form-control mb-2" placeholder="New Password">
+      <input type="password" name="confirm_password" class="form-control" placeholder="Confirm New Password">
+    </div>
+
+    <!-- Submit -->
+    <div class="col-12 text-center mt-4 mb-4">
+      <button type="submit" class="btn btn-primary px-4"><i class="fas fa-save me-2"></i>Save Changes</button>
+      <a href="{{ url_for('recipient.profile') }}" class="btn btn-light ms-2"><i class="fas fa-times me-2"></i>Cancel</a>
+    </div>
+    </form>
+  </div>
+</div>
+</div>
+
+
+
+<!-- =========================
+     Country / State / City JS (uses your /api endpoints)
+     ========================= -->
+<script>
+  async function fetchJSON(url) {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Network response not ok');
+    return await res.json();
+  }
+
+  async function loadCountries(selectedCode = null) {
+    const sel = document.getElementById('country');
+    if (!sel) return;
+    try {
+      const countries = await fetchJSON('/recipient/api/countries');
+      sel.innerHTML = '<option value="">Select Country</option>';
+      countries.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.iso2;
+        opt.textContent = c.name;
+        if (selectedCode && c.iso2 === selectedCode) opt.selected = true;
+        sel.appendChild(opt);
+      });
+    } catch (e) {
+      console.error('Failed to load countries', e);
+    }
+  }
+
+  async function loadStates(countryCode, selectedCode = null) {
+    const sel = document.getElementById('state');
+    if (!sel || !countryCode) return;
+    try {
+      const states = await fetchJSON(`/recipient/api/countries/${countryCode}/states`);
+      sel.innerHTML = '<option value="">Select State</option>';
+      states.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.iso2;
+        opt.textContent = s.name;
+        if (selectedCode && s.iso2 === selectedCode) opt.selected = true;
+        sel.appendChild(opt);
+      });
+    } catch (e) {
+      console.error('Failed to load states', e);
+    }
+  }
+
+  async function loadCities(countryCode, stateCode, selectedId = null) {
+    const sel = document.getElementById('city');
+    if (!sel || !countryCode || !stateCode) return;
+    try {
+      const cities = await fetchJSON(`/recipient/api/countries/${countryCode}/states/${stateCode}/cities`);
+      sel.innerHTML = '<option value="">Select City</option>';
+      cities.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.id;
+        opt.textContent = c.name;
+        if (selectedId && String(c.id) === String(selectedId)) opt.selected = true;
+        sel.appendChild(opt);
+      });
+    } catch (e) {
+      console.error('Failed to load cities', e);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const countrySel = document.getElementById('country');
+    const stateSel = document.getElementById('state');
+    const citySel = document.getElementById('city');
+
+    // initial values from server
+    const initialCountry = "{{ user.country or '' }}";
+    const initialState = "{{ user.state or '' }}";
+    const initialCity = "{{ user.city or '' }}";
+
+    // Load countries and then pre-select and load states/cities
+    loadCountries(initialCountry).then(() => {
+      if (initialCountry) {
+        loadStates(initialCountry, initialState).then(() => {
+          if (initialState) loadCities(initialCountry, initialState, initialCity);
+        });
+      }
+    });
+
+    countrySel?.addEventListener('change', function () {
+      const cc = this.value;
+      stateSel.innerHTML = '<option>Loading...</option>';
+      citySel.innerHTML = '<option>Select state first</option>';
+      if (cc) loadStates(cc);
+    });
+
+    stateSel?.addEventListener('change', function () {
+      const sc = this.value;
+      const cc = countrySel?.value;
+      citySel.innerHTML = '<option>Loading...</option>';
+      if (cc && sc) loadCities(cc, sc);
+    });
+  });
+</script>
+
+<!-- =========================
+     Geocoding (Nominatim) — optional; updates hidden lat/lon fields when a city is selected
+     ========================= -->
+<script>
+  async function getLatLon(city, state, country) {
+    const query = `${city}, ${state}, ${country}`;
+    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`;
+
+    try {
+      const response = await fetch(url, { headers: { "User-Agent": "aprycot-app (you@example.com)" } });
+      const data = await response.json();
+      if (data.length > 0) {
+        document.getElementById('latitude').value = data[0].lat;
+        document.getElementById('longitude').value = data[0].lon;
+      } else {
+        document.getElementById('latitude').value = '';
+        document.getElementById('longitude').value = '';
+      }
+    } catch (err) {
+      console.error('Geocode error', err);
+    }
+  }
+
+  document.addEventListener('change', function (e) {
+    if (e.target && e.target.id === 'city') {
+      const country = document.getElementById('country').selectedOptions[0]?.text || '';
+      const state = document.getElementById('state').selectedOptions[0]?.text || '';
+      const city = e.target.selectedOptions[0]?.text || '';
+      if (country && state && city) getLatLon(city, state, country);
+    }
+  });
+</script>
+
+{% endblock %}

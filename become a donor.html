@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Role-Based Footers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        h1 {
+            color: #2f3542;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 700;
+        }
+        
+        .role-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .role-btn {
+            background: #f1f2f6;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: #2f3542;
+        }
+        
+        .role-btn.active {
+            background: #6a11cb;
+            color: white;
+            box-shadow: 0 4px 15px rgba(106, 17, 203, 0.3);
+        }
+        
+        .role-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .footer-demo {
+            border: 2px dashed #a4b0be;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            min-height: 300px;
+            position: relative;
+        }
+        
+        /* Footer Base Styles */
+        footer {
+            background: #2f3542;
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 30px;
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .footer-section {
+            margin-bottom: 20px;
+        }
+        
+        .footer-section h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #dfe4ea;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-section h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: #6a11cb;
+        }
+        
+        .footer-section p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #a4b0be;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #a4b0be;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .footer-links a:hover {
+            color: #6a11cb;
+        }
+        
+        .footer-social {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .footer-social a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: #3d4451;
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-social a:hover {
+            background: #6a11cb;
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px 20px 0;
+            text-align: center;
+            border-top: 1px solid #3d4451;
+            margin-top: 30px;
+            color: #a4b0be;
+            font-size: 14px;
+        }
+        
+        /* Donor Footer Specific Styles */
+        .donor-footer {
+            background: linear-gradient(to right, #1a2a6c, #2b5876);
+        }
+        
+        .donor-footer .footer-section h3:after {
+            background: #4ecdc4;
+        }
+        
+        .donor-footer .footer-links a:hover {
+            color: #4ecdc4;
+        }
+        
+        .donor-footer .footer-social a:hover {
+            background: #4ecdc4;
+        }
+        
+        /* Recipient Footer Specific Styles */
+        .recipient-footer {
+            background: linear-gradient(to right, #396afc, #2948ff);
+        }
+        
+        .recipient-footer .footer-section h3:after {
+            background: #43e97b;
+        }
+        
+        .recipient-footer .footer-links a:hover {
+            color: #43e97b;
+        }
+        
+        .recipient-footer .footer-social a:hover {
+            background: #43e97b;
+        }
+        
+        /* Volunteer Footer Specific Styles */
+        .volunteer-footer {
+            background: linear-gradient(to right, #348f50, #56b4d3);
+        }
+        
+        .volunteer-footer .footer-section h3:after {
+            background: #f9d423;
+        }
+        
+        .volunteer-footer .footer-links a:hover {
+            color: #f9d423;
+        }
+        
+        .volunteer-footer .footer-social a:hover {
+            background: #f9d423;
+        }
+        
+        /* Admin Footer Specific Styles */
+        .admin-footer {
+            background: linear-gradient(to right, #0c0c0c, #3a3a3a);
+        }
+        
+        .admin-footer .footer-section h3:after {
+            background: #ff6b6b;
+        }
+        
+        .admin-footer .footer-links a:hover {
+            color: #ff6b6b;
+        }
+        
+        .admin-footer .footer-social a:hover {
+            background: #ff6b6b;
+        }
+        
+        .code-snippet {
+            background: #2d3436;
+            color: #dfe6e9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            font-size: 14px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #a4b0be;
+        }
+        
+        .copy-btn {
+            background: #6a11cb;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background 0.3s ease;
+        }
+        
+        .copy-btn:hover {
+            background: #7e22ce;
+        }
+        
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .role-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .role-btn {
+                width: 100%;
+                max-width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Role-Based Footer Components</h1>
+        
+        <div class="role-selector">
+            <button class="role-btn active" data-role="donor">Donor Footer</button>
+            <button class="role-btn" data-role="recipient">Recipient Footer</button>
+            <button class="role-btn" data-role="volunteer">Volunteer Footer</button>
+            <button class="role-btn" data-role="admin">Admin Footer</button>
+        </div>
+        
+        <div class="footer-demo" id="footerDemo">
+            <!-- Footer will be inserted here by JavaScript -->
+        </div>
+        
+        <div class="code-snippet" id="codeSnippet">
+            <!-- Code will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const roleButtons = document.querySelectorAll('.role-btn');
+            const footerDemo = document.getElementById('footerDemo');
+            const codeSnippet = document.getElementById('codeSnippet');
+            
+            // Footer templates
+            const footerTemplates = {
+                donor: `
+                <footer class="donor-footer">
+                    <div class="footer-content">
+                        <div class="footer-section">
+                            <h3>About FoodShare</h3>
+                            <p>Connecting food donors with communities in need. Together we can reduce food waste and fight hunger.</p>
+                            <div class="footer-social">
+                                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                        
+                        <div class="footer-section">
+                            <h3>Donor Resources</h3>
+                            <ul class="footer-links">
+                                <li><a href="#"><i class="fas fa-arrow-right"></i> How to Donate</a></li>
+                                <li><a href="#"><i class="fas fa-arrow-right"></i> Tax Benefits</a></li>
+                                <li><a href="#"><i class="fas fa-arrow-right"></i> Food Safety Guidelines</a></li>
+                                <li><a href="#"><i class="fas fa-arrow-right"></i> Schedule a Pickup</a></li>
+                                <li><a href="#"><i class="fas fa-arrow-right"></i> Impact Report</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="footer-section">
+                            <h3>Contact Us</h3>
+                            <p><i class="fas fa-map-marker-alt"></i> 123 Food Drive, City, State 12345</p>
+                            <p><i class="fas fa-phone"></i> (555) 123-4567</p>
+                            <p><i class="fas fa-envelope"></i> donors@foodshare.org</p>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-bottom">
+                        <p>&copy; 2023 FoodShare Donor Platform. All rights reserved.</p>
+                    </div>
+                </footer>
+                `,
+                
+                recipient: `
+                <footer class="recipient-footer">
+                    <div class="footer-content">
+                        <div class="footer-section">
+                            <h3>Get Help</h3>
+                            <p>We're here to help you access nutritious food when you need it most.</p>
+                            <div class="footer-social">
+                                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                                <a href="#"><i class="fab fa-whatsapp"></i></a>
+                            </div>
+                        </div>
+                        
+                        <div class="footer-section">
+                            <h3>Quick Access</h3>
+                            <ul class="footer-links">
+                                <li><a href="#"><i class="fas fa-arrow-right"></i> Find Food Nearby</a></li>
+                                <li><a href="#"><i class="fas fa-arrow-right"></i> Request Assistance</a></li>
+                                <li><a href="#"><i class="fas fa-arrow-right"></i> FAQ</a></li>
+                                <li><a href="#"><i class="fas fa-arrow-right"></i> Eligibility Criteria</a></li>
+                                <li><a href="#"><i class="fas fa-arrow-right"></i> Mobile App</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="footer-section">
+                            <h3>Support Hotline</h3>
+                            <p><i class="fas fa-phone"></i> (555) 987-HELP</p>
+                            <p><i class="fas fa-clock"></i> 24/7 Availability</p>
+                            <p><i class="fas fa-envelope"></i> help@foodshare.org</p>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-bottom">
+                        <p>&copy; 2023 FoodShare Recipient Services. All rights reserved.</p>
+                    </div>
+                </footer>
+                `,
+                
+                volunteer: `
+                <footer class="volunteer-footer">
+                    <div class="footer-content">
+                        <div class="footer-section">
+                            <h3>Make a Difference</h3>
+                            <p>Join our community of volunteers helping to redistribute food to those in need.</p>
+                            <div class="footer-social">
+                                <a href="#"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#"><i class="fab fa-twitter"></i></a>
+                                <a href="#"><i class="fab fa-instagram"></i></a>
+                                <a href="#"><i class="fab fa-youtube"></i></a>
+                            </div>
+                        </div>
+                        
+                        <div class="footer-section">
+                            <h3>Volunteer Resources</h3>
+                            <ul class="footer-links">
+                                <li><a href="#"><i class="fas fa-arrow-right"></i> Upcoming Events</a></li>
+                                <li><a href="#"><i class="fas fa-arrow-right"></i> Training Materials</a></li>
+                                <li><a href="#"><i class="fas fa-arrow-right"></i> Volunteer Handbook</a></li>
+                                <li><a href="#"><i class="fas fa-arrow-right"></i> Log Hours</a></li>
+                                <li><a href="#"><i class="fas fa-arrow-right"></i> Achievement Badges</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="footer-section">
+                            <h3>Volunteer Coordinator</h3>
+                            <p><i class="fas fa-user"></i> Sarah Johnson</p>
+                            <p><i class="fas fa-phone"></i> (555) 765-4321</p>
+                            <p><i class="fas fa-envelope"></i> volunteers@foodshare.org</p>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-bottom">
+                        <p>&copy; 2023 FoodShare Volunteer Network. All rights reserved.</p>
+                    </div>
+                </footer>
+                `,
+                
+                admin: `
+                <footer class="admin-footer">
+                    <div class="footer-content">
+                        <div class="footer-section">
+                            <h3>Admin Portal</h3>
+                            <p>Management system for FoodShare operations and analytics.</p>
+                            <div class="footer-social">
+                                <a href="#"><i class="fas fa-life-ring"></i></a>
+                                <a href="#"><i class="fas fa-book"></i></a>
+                                <a href="#"><i class="fas fa-chart-line"></i></a>
+                                <a href="#"><i class="fas fa-cog"></i></a>
+                            </div>
+                        </div>
+                        
+                        <div class="footer-section">
+                            <h3>Admin Tools</h3>
+                            <ul class="footer-links">
+                                <li><a href="#"><i class="fas fa-arrow-right"></i> Dashboard Analytics</a></li>
+                                <li><a href="#"><i class="fas fa-arrow-right"></i> User Management</a></li>
+                                <li><a href="#"><i class="fas fa-arrow-right"></i> Reporting</a></li>
+                                <li><a href="#"><i class="fas fa-arrow-right"></i> System Settings</a></li>
+                                <li><a href="#"><i class="fas fa-arrow-right"></i> Audit Logs</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="footer-section">
+                            <h3>System Info</h3>
+                            <p><i class="fas fa-server"></i> Version 3.2.1</p>
+                            <p><i class="fas fa-database"></i> Last Backup: Today 02:00</p>
+                            <p><i class="fas fa-shield-alt"></i> System Secure</p>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-bottom">
+                        <p>&copy; 2023 FoodShare Administration System. Restricted access.</p>
+                    </div>
+                </footer>
+                `
+            };
+            
+            // Code snippets for each footer
+            const codeSnippets = {
+                donor: `<!-- Donor Footer -->
+<footer class="donor-footer">
+  <div class="footer-content">
+    <div class="footer-section">
+      <h3>About FoodShare</h3>
+      <p>Connecting food donors with communities in need...</p>
+    </div>
+    <!-- More footer content -->
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2023 FoodShare Donor Platform. All rights reserved.</p>
+  </div>
+</footer>`,
+                
+                recipient: `<!-- Recipient Footer -->
+<footer class="recipient-footer">
+  <div class="footer-content">
+    <div class="footer-section">
+      <h3>Get Help</h3>
+      <p>We're here to help you access nutritious food...</p>
+    </div>
+    <!-- More footer content -->
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2023 FoodShare Recipient Services. All rights reserved.</p>
+  </div>
+</footer>`,
+                
+                volunteer: `<!-- Volunteer Footer -->
+<footer class="volunteer-footer">
+  <div class="footer-content">
+    <div class="footer-section">
+      <h3>Make a Difference</h3>
+      <p>Join our community of volunteers helping to redistribute food...</p>
+    </div>
+    <!-- More footer content -->
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2023 FoodShare Volunteer Network. All rights reserved.</p>
+  </div>
+</footer>`,
+                
+                admin: `<!-- Admin Footer -->
+<footer class="admin-footer">
+  <div class="footer-content">
+    <div class="footer-section">
+      <h3>Admin Portal</h3>
+      <p>Management system for FoodShare operations and analytics...</p>
+    </div>
+    <!-- More footer content -->
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2023 FoodShare Administration System. Restricted access.</p>
+  </div>
+</footer>`
+            };
+            
+            // Set initial state
+            showFooter('donor');
+            
+            // Add event listeners to role buttons
+            roleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const role = this.getAttribute('data-role');
+                    
+                    // Update active button
+                    roleButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show the selected footer
+                    showFooter(role);
+                });
+            });
+            
+            function showFooter(role) {
+                footerDemo.innerHTML = footerTemplates[role];
+                codeSnippet.innerHTML = `
+                    <div class="code-header">
+                        <span>HTML Code for ${role.charAt(0).toUpperCase() + role.slice(1)} Footer</span>
+                        <button class="copy-btn" onclick="copyCode()">Copy Code</button>
+                    </div>
+                    <pre>${escapeHtml(codeSnippets[role])}</pre>`;
+                codeSnippet.style.display = 'block';
+            }
+            
+            function escapeHtml(unsafe) {
+                return unsafe
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+        });
+        
+        function copyCode() {
+            const codeElement = document.querySelector('#codeSnippet pre');
+            const textArea = document.createElement('textarea');
+            textArea.value = codeElement.textContent;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            
+            // Show confirmation
+            const copyBtn = document.querySelector('.copy-btn');
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = 'Copied!';
+            setTimeout(() => {
+                copyBtn.textContent = originalText;
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

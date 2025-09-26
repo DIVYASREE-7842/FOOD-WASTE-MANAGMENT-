@@ -1,0 +1,35 @@
+{% extends "admin/dashboard.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h3>Food Request Details</h3>
+    <table class="table table-bordered">
+        <tr><th>ID</th><td>{{ food.request_id }}</td></tr>
+        <tr><th>Quantity</th><td>{{ food.quantity }}</td></tr>
+        <tr><th>Place</th><td>{{ food.address }}</td></tr>
+        <tr><th>Organization</th><td>{{ food.org_name }}</td></tr>
+        <tr><th>Food Type</th><td>{{ food.food_type }}</td></tr>
+        <tr><th>Food </th><td>{{ food.food }}</td></tr>
+        <tr><th>Status</th>
+            <td>
+                {% if food.status == 'Approved' %}
+                    <span class="badge bg-success">{{ food.status }}</span>
+                {% elif food.status == 'Rejected' %}
+                    <span class="badge bg-danger">{{ food.status }}</span>
+                {% else %}
+                    <span class="badge bg-warning">{{ food.status }}</span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+           <form action="{{ url_for('admin.approve_request', request_id=food.request_id) }}" method="post" style="display:inline;">
+    <button type="submit" class="btn btn-success">Approve</button>
+</form>
+
+<form action="{{ url_for('admin.reject_request', request_id=food.request_id) }}" method="post" style="display:inline;">
+    <button type="submit" class="btn btn-danger">Reject</button>
+</form>
+        </tr>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Request Timeline{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+  <h3 class="mb-4">Request Timeline</h3>
+
+  <!-- Request Info -->
+  <div class="card p-3 mb-4">
+    <h5>{{ request.quantity }} {{ request.food_type }}</h5>
+    <p><b>Donor:</b> {{ request.donor_name }} ({{ request.donor_address }})</p>
+    <p><b>Status:</b> {{ request.status }}</p>
+  </div>
+
+  <!-- Timeline -->
+  <ul class="timeline list-unstyled">
+    {% for step in timeline %}
+      <li class="mb-3">
+        <div class="card shadow-sm p-3 {% if loop.last %}bg-success text-white{% endif %}">
+          <strong>{{ step.status }}</strong>
+          <br>
+          <small>{{ step.updated_at.strftime('%Y-%m-%d %H:%M') }}</small>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <!-- Feedback Form -->
+  {% if request.status == 'COMPLETED' and not request.feedback_given %}
+  <div class="card p-3 mt-4">
+    <h5>Leave Feedback</h5>
+    <form id="feedbackForm">
+      <div class="mb-3">
+        <label for="rating" class="form-label">Rating</label>
+        <select id="rating" class="form-select" required>
+          <option value="">Choose...</option>
+          <option value="5">⭐️⭐️⭐️⭐️⭐️</option>
+          <option value="4">⭐️⭐️⭐️⭐️</option>
+          <option value="3">⭐️⭐️⭐️</option>
+          <option value="2">⭐️⭐️</option>
+          <option value="1">⭐️</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="message" class="form-label">Feedback</label>
+        <textarea id="message" class="form-control" rows="3"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit Feedback</button>
+    </form>
+  </div>
+  {% endif %}
+</div>
+
+<style>
+  .timeline .card {
+    border-left: 4px solid #0d6efd;
+    border-radius: 10px;
+  }
+</style>
+
+<script>
+document.getElementById("feedbackForm")?.addEventListener("submit", async function(e) {
+  e.preventDefault();
+  const rating = document.getElementById("rating").value;
+  const message = document.getElementById("message").value;
+
+  const response = await fetch("{{ url_for('recipient.submit_feedback', request_id=request.request_id) }}", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ rating, message })
+  });
+  const result = await response.json();
+  alert(result.message);
+  if (result.success) {
+    location.reload();
+  }
+});
+</script>
+{% endblock %}

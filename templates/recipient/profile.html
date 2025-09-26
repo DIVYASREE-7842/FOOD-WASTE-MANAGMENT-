@@ -1,0 +1,316 @@
+{% extends "base.html" %}
+{% block title %}{{ user.first_name }}'s Profile{% endblock %}
+
+{% block content %}
+<style>
+  /* Custom CSS for Profile Page */
+:root {
+  --primary-color: #ee9d4d7c;
+  --secondary-color: #fcac68;
+  --dark-color: #2c3e50;
+  --light-color: #f4f7fa;
+  --text-dark: #333;
+  --text-medium: #555;
+  --text-light: #818999;
+  --transition-speed: 0.4s;
+}
+
+/* Reset and base styles */
+
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Animation */
+.animate__animated {
+  animation-duration: 0.8s;
+}
+
+.animate__fadeIn {
+  animation-name: fadeIn;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Card styling */
+.card {
+  border: none;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15) !important;
+}
+
+.card-header {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)) !important;
+  border: none;
+  padding: 1.2rem;
+}
+
+.card-header h3 {
+  font-weight: 700;
+  font-size: 1.8rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+  color: var(--dark-color);
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+.card-footer {
+  background: rgba(244, 247, 250, 0.8);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 1.2rem;
+}
+
+/* Profile image */
+.rounded-circle {
+  border: 4px solid var(--secondary-color);
+  transition: all var(--transition-speed);
+}
+
+.rounded-circle:hover {
+  transform: scale(1.05);
+  border-color: var(--primary-color);
+}
+
+/* Text styling */
+.text-center {
+  color: var(--text-dark);
+}
+
+.text-center.mb-3 {
+  font-size: 1.1rem;
+  color: var(--text-medium);
+}
+
+strong {
+  color: var(--dark-color);
+  font-weight: 600;
+}
+
+.col-md-6 {
+  color: var(--text-medium);
+  margin-bottom: 0.5rem;
+}
+
+.col-md-6.mt-2 {
+  color: var(--text-dark);
+}
+
+.col-md-12.mt-3 {
+  color: var(--text-dark);
+}
+
+/* Badge styling */
+.badge {
+  padding: 0.5rem 0.8rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.bg-success {
+  background: linear-gradient(135deg, #28a745, #20c997) !important;
+  color: white !important;
+}
+
+.bg-danger {
+  background: linear-gradient(135deg, #dc3545, #fd7e14) !important;
+  color: white !important;
+}
+
+.bg-warning {
+  background: linear-gradient(135deg, #ffc107, #ff9800) !important;
+  color: #000 !important;
+}
+.badge.bg-primary{
+   background: linear-gradient(135deg, var(--text-dark), var(--secondary-color));
+   padding: 10px;
+   font-size: large;
+}
+/* Organization info */
+.mt-4 h5 {
+  color: var(--dark-color);
+  font-weight: 700;
+  border-bottom: 2px solid var(--secondary-color);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.mt-4 div {
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+.mt-4 b {
+  color: var(--dark-color);
+  min-width: 80px;
+  display: inline-block;
+}
+
+/* Button styling */
+.btn {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all var(--transition-speed);
+  border: none;
+  margin: 0 0.5rem;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--secondary-color), var(--secondary-color));
+  box-shadow: 0 4px 8px rgba(238, 157, 77, 0.3);
+  color: var(--dark-color);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(238, 157, 77, 0.4);
+  color: var(--dark-color);
+}
+
+.btn-secondary {
+  background: var(--light-color);
+  color: var(--text-dark);
+  border: 2px solid var(--text-light);
+}
+
+.btn-secondary:hover {
+  background: var(--text-light);
+  color: white;
+  border-color: var(--text-light);
+  transform: translateY(-2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 1.5rem;
+  }
+  
+  .row.ms-5 {
+    margin-left: 0 !important;
+  }
+  
+  .col-md-6 {
+    margin-bottom: 0.8rem;
+  }
+  
+  .btn {
+    margin-bottom: 0.5rem;
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  body {
+    padding: 10px;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .card-header h3 {
+    font-size: 1.5rem;
+  }
+  
+  .rounded-circle {
+    width: 100px !important;
+    height: 100px !important;
+  }
+}
+</style>
+<div class="container my-5 animate__animated animate__fadeIn">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+          <h3 class="mb-0">My Account</h3>
+        </div>
+        <div class="card-body">
+          <div class="text-center mb-3">
+            {% if user.user_profile %}
+            <img src="{{ url_for('static', filename='uploads/' ~ user.user_profile) }}" alt="Profile Photo"
+              class="rounded-circle shadow" style="width:120px; height:120px; object-fit:cover;">
+            {% else %}
+            <img src="https://via.placeholder.com/120" class="rounded-circle shadow" alt="No photo">
+            {% endif %}
+          
+          </div>
+            <div class="text-center mb-3">
+  {% for r in role_display.split(',') %}
+    <span class="badge bg-primary me-1">{{ r.strip() }}</span>
+  {% endfor %}
+
+
+              <div class="col-md-12 mt-3">
+    <strong>Account Status:</strong>
+    {% if request_status == 'Approved' %}
+      <span class="badge bg-success">Approved</span>
+    {% elif request_status == 'Rejected' %}
+      <span class="badge bg-danger">Rejected</span>
+    {% else %}
+      <span class="badge bg-warning text-dark">Pending</span>
+    {% endif %}
+  </div>
+            </div>
+            
+            <div class="row ms-5">
+            <div class="col-md-6"><strong>First name:</strong> {{ user.first_name }}</div>
+            <div class="col-md-6"><strong>Last name:</strong> {{ user.last_name }}</div>
+            <div class="col-md-6 mt-2"><strong>Email:</strong> {{ user.email or 'Not set' }}</div>
+            <div class="col-md-6 mt-2"><strong>Phone:</strong> {{ user.phone or 'Not set' }}</div>
+            <div class="col-md-6 mt-2"><strong>Country:</strong> {{ country_name or 'Not set' }}</div>
+            <div class="col-md-6 mt-2"><strong>State:</strong> {{ state_name or 'Not set' }}</div>
+            <div class="col-md-6 mt-2"><strong>City:</strong> {{ city_name or 'Not set' }}</div>
+            <div class="col-md-6 mt-2"><strong>Address:</strong> {{ user.address or 'Not set' }}</div>
+
+            {% if donor_profile %}
+            <div class="col-md-6 mt-4">
+            <h5>Donor Organization</h5>
+            <div><b>Name:</b> {{ donor_profile.org_name }}</div>
+            <div><b>Type:</b> {{ donor_profile.org_type }}</div>
+            
+            {% endif %}
+</div>
+            {% if recipient_profile %}
+            <div class="col-md-6 mt-4">
+            <h5>Recipient Organization</h5>
+            <div class="col-md-6"><b>Name:</b> {{ recipient_profile.org_name }}</div>
+            <div class="col-md-6"><b>Type:</b> {{ recipient_profile.org_type }}</div>
+            </div>
+            
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="card-footer text-center">
+          <a href="{{ url_for('recipient.dashboard') }}" class="btn btn-secondary">Back to Home</a>
+          <a href="{{ url_for('recipient.update_profile') }}" class="btn btn-primary">Edit Account</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

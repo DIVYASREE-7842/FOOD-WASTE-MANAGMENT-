@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+{% block title %}Donation Details{% endblock %}
+
+{% block content %}
+<style>
+ /* Custom CSS for Donation Details Page */
+:root {
+  --primary-color: #ee9d4d7c;
+  --secondary-color: #fcac68;
+  --dark-color: #2c3e50;
+  --light-color: #f4f7fa;
+  --text-dark: #333;
+  --text-medium: #555;
+  --text-light: #818999;
+  --transition-speed: 0.4s;
+}
+
+
+
+/* Card styling */
+.card {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+  height: 100%;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Image styling */
+.card-img-top {
+  height: 270px;
+  object-fit: cover;
+  transition: transform var(--transition-speed);
+  padding:20px;
+}
+
+.card:hover .card-img-top {
+  transform: scale(1.03);
+}
+
+/* Card body content */
+.card-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-title {
+  color: var(--dark-color);
+  font-weight: 700;
+  margin-bottom: 1.2rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 2px solid var(--secondary-color);
+}
+
+.card-text {
+  color: var(--text-medium);
+  margin-bottom: 0.6rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.card-text b {
+  color: var(--dark-color);
+  font-weight: 600;
+  display: inline-block;
+  min-width: 100px;
+}
+
+/* Button styling */
+.btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all var(--transition-speed);
+  border: none;
+  
+}
+
+.btn-success {
+  background: linear-gradient(135deg, var(--secondary-color), var(--secondary-color));
+  box-shadow: 0 4px 8px rgba(238, 157, 77, 0.3);
+  width:80px;
+}
+
+.btn-success:hover {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(238, 157, 77, 0.4);
+}
+
+.btn-secondary {
+  background: var(--light-color);
+  color: var(--text-dark);
+  border: 2px solid var(--text-light);
+}
+
+.btn-secondary:hover {
+  background: var(--text-light);
+  color: white;
+  border-color: var(--text-light);
+  transform: translateY(-2px);
+}
+
+/* Map card styling */
+.card-header.bg-info {
+  background: linear-gradient(135deg, var(--secondary-color), var(--primary-color)) !important;
+  border: none;
+  padding: 0.8rem 1.25rem;
+}
+
+.card-header h5 {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+#map {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: box-shadow var(--transition-speed);
+}
+
+#map:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Row and column adjustments */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -10px;
+}
+
+.col-md-6 {
+  padding: 0 10px;
+  flex: 0 0 50%;
+  max-width: 50%;
+  margin-bottom: 20px;
+}
+
+/* Animation for card entrance */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.col-md-6 {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.col-md-6:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+/* Button container */
+.mt-2 {
+  margin-top: 1rem !important;
+}
+
+.w-100 {
+  width: 100% !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .col-md-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  
+  .card-img-top {
+    height: 200px;
+  }
+}
+
+@media (max-width: 576px) {
+  body {
+    padding: 10px;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+  
+  .card-title {
+    font-size: 1.3rem;
+  }
+  
+  .card-text {
+    font-size: 0.9rem;
+  }
+  
+  .btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+  }
+}
+</style>
+<div class="container-fluid mt-4">
+    <div class="row">
+        <!-- Left: Donation Info -->
+        <div class="col-md-6">
+           <div class="card shadow-lg">
+    <img src="{{ url_for('static', filename='uploads/' ~ (donation['food_img'] if donation['food_img'] else 'food_imag.jpg')) }}"
+        class="card-img-top" alt="{{ donation['food_type'] }}">
+    <div class="card-body">
+        <h3 class="card-title text-primary">{{ donation['food_type'] }}</h3>
+        <p class="card-text"><b>Food:</b> {{ donation['food'] }}</p>
+        <p class="card-text"><b>Quantity:</b> {{ donation['quantity'] }}</p>
+        <p class="card-text"><b>Description:</b> {{ donation['description'] }}</p>
+        <p class="card-text"><b>Created At:</b> {{ donation['prepared_at'].strftime('%Y-%m-%d %H:%M:%S') }}</p>
+        <p class="card-text"><b>End Time:</b> {{ donation['expired_at'].strftime('%Y-%m-%d %H:%M:%S') }}</p>
+        <p class="card-text"><b>Donor:</b> {{ user['first_name'] }} {{ user['last_name'] }}</p>
+<p class="card-text"><b>Distance:</b> {{ distance_km }}</p>
+<p class="card-text"><b>Status:</b> {{ donation['status'] }}</p>
+        <!-- Buttons side by side -->
+        <div class="d-flex justify-content-center gap-2 mt-3">
+            <a href="{{ url_for('recipient.request_food', donation_id=donation['donation_id']) }}" class="btn btn-success flex-fill">Request</a>
+            <a href="{{ url_for('recipient.available_donations') }}" class="btn btn-secondary flex-fill">Back</a>
+        </div>
+    </div>
+</div>
+
+        </div>
+
+        <!-- Right: Map -->
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Donation Location</h5>
+                </div>
+                <div class="card-body">
+                    <div id="map" style="height:600px; border-radius: 10px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+    // Initialize map centered between recipient and donor
+    var recipientLat = '{{ recipient.latitude }}';
+    var recipientLon = '{{ recipient.longitude }}';
+    var donorLat = '{{ user.latitude }}';
+    var donorLon = '{{ user.longitude }}';
+
+    var map = L.map('map').fitBounds([
+        [recipientLat, recipientLon],
+        [donorLat, donorLon]
+    ]);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+    }).addTo(map);
+
+    // Recipient marker
+    var recipientMarker = L.marker([recipientLat, recipientLon], {
+        icon: L.icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/red-dot.png", iconSize: [32,32] })
+    }).addTo(map).bindPopup("You (Recipient)").openPopup();
+
+    // Donor marker
+    var donorMarker = L.marker([donorLat, donorLon], {
+        icon: L.icon({ iconUrl: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png", iconSize: [32,32] })
+    }).addTo(map).bindPopup(
+        "<b>{{ donation.food_type }}</b><br>{{ donation.description }}<br>Donor: {{ user.first_name }} {{ user.last_name }}<br>Distance: {{ distance_km }} km"
+    );
+
+    // Optional: draw a line between donor and recipient
+    var latlngs = [[recipientLat, recipientLon], [donorLat, donorLon]];
+    var polyline = L.polyline(latlngs, {color: 'green', weight: 3, dashArray: '5,10'}).addTo(map);
+</script>
+{% endblock %}

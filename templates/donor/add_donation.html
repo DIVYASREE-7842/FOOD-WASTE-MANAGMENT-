@@ -1,0 +1,296 @@
+{% extends "base.html" %}
+{% block title %} Add Food Donation {% endblock %}
+
+{% block content %}
+<style>
+  body {
+    background: #fbcfa2;
+    min-height: 100vh;
+  }
+
+  .donation-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 620px;
+    width: 100%;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    margin: 2rem auto;
+  }
+
+  .form-title {
+    text-align: center;
+    color: #e76f0b;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+  }
+
+  .btn-submit {
+    width: 100%;
+    background: #ef8827dc;
+    border: none;
+    color: #fff;
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+
+  .btn-submit:hover {
+    background: #e76f0b;
+  }
+
+  .btn-location {
+    width: 100%;
+    background: #7c512c;
+    color: #fff;
+    border: none;
+    padding: 0.6rem;
+    border-radius: 7px;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.3s;
+  }
+
+  .btn-location:hover {
+    background: #5a3920;
+  }
+
+  label {
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 0px;
+    color: #7c512c;
+  }
+
+  input[type="number"],
+  input[type="datetime-local"],
+  input[type="text"],
+  select,
+  textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border-radius: 7px;
+    border: 1px solid #dedede;
+    background: #f4f7fa;
+    font-size: 1rem;
+  }
+</style>
+
+<div class="container py-4">
+  <div class="donation-card">
+    <h2 class="form-title">Add Food Donation</h2>
+
+    <form id="donationForm" method="POST" action="{{ url_for('donor.add_donation') }}" enctype="multipart/form-data">
+
+      <div class="mb-3">
+        <label for="quantity">Quantity (number of meals/servings)</label>
+        <input type="number" id="quantity" name="quantity" min="1" placeholder="Enter quantity" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="food_type">Food Type</label>
+        <select id="food_type" name="food_type" required>
+          <option value="">Select food type</option>
+          <option value="VEG">VEG</option>
+          <option value="NONVEG">NON-VEG</option>
+          <option value="JAIN">JAIN</option>
+          <option value="MIXED">MIXED</option>
+        </select>
+      </div>
+
+      <div class="mb-3">
+        <label for="food">Food</label>
+        <input type="text" id="food" name="food" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="prepared_at">Preparation Date & Time</label>
+        <input type="datetime-local" id="prepared_at" name="prepared_at" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="expired_at">Expiry Date & Time</label>
+        <input type="datetime-local" id="expired_at" name="expired_at" required>
+      </div>
+
+      <div class="mb-3">
+        <label for="description">Description (optional)</label>
+        <textarea id="description" name="description" rows="3"
+          placeholder="Describe the food items, ingredients, packaging, etc."></textarea>
+      </div>
+
+      <div class="mb-3">
+        <input type="file" name="photo" accept="image/*">
+      </div>
+
+      <!-- Location Fields -->
+      <div class="row align-items-end">
+        <div class="row align-items-end">
+  <div class="col-md-4 mb-3">
+    <label class="form-label">Country</label>
+    <select name="country_code" id="country" class="form-select" required></select>
+  </div>
+  <div class="col-md-4 mb-3">
+    <label class="form-label">State</label>
+    <select name="state_code" id="state" class="form-select" required></select>
+  </div>
+  <div class="col-md-4 mb-3">
+    <label class="form-label">City</label>
+    <select name="city_id" id="city" class="form-select" required></select>
+  </div>
+</div>
+      </div>
+
+      <!-- Hidden latitude/longitude -->
+      <input type="hidden" id="latitude" name="latitude">
+      <input type="hidden" id="longitude" name="longitude">
+
+      <button type="submit" class="btn-submit">Submit Donation</button>
+    </form>
+  </div>
+</div>
+<script>
+
+// ===============================
+  // Country / State / City Dropdowns
+  // ===============================
+  async function loadCountries() {
+    const countrySelect = document.getElementById('country');
+    const stateSelect = document.getElementById('state');
+    const citySelect = document.getElementById('city');
+
+    if (!countrySelect) return;
+    try {
+      const response = await fetch('/auth/api/countries');
+      const countries = await response.json();
+      countrySelect.innerHTML = '<option value="">Select Country</option>';
+      countries.forEach(c => {
+        const option = document.createElement('option');
+        option.value = c.iso2;
+        option.textContent = c.name;
+        countrySelect.appendChild(option);
+      });
+      countrySelect.disabled = false;
+    } catch (error) {
+      console.error('Error loading countries:', error);
+    }
+  }
+
+  async function loadStates(countryCode) {
+    const stateSelect = document.getElementById('state');
+    const citySelect = document.getElementById('city');
+    if (!stateSelect || !countryCode) return;
+
+    try {
+      const response = await fetch(`/auth/api/countries/${countryCode}/states`);
+      const states = await response.json();
+      stateSelect.innerHTML = '<option value="">Select State</option>';
+      states.forEach(s => {
+        const option = document.createElement('option');
+        option.value = s.iso2;
+        option.textContent = s.name;
+        stateSelect.appendChild(option);
+      });
+      stateSelect.disabled = false;
+      if (citySelect) citySelect.disabled = true;
+    } catch (error) {
+      console.error('Error loading states:', error);
+    }
+  }
+
+  async function loadCities(countryCode, stateCode) {
+    const citySelect = document.getElementById('city');
+    if (!citySelect || !countryCode || !stateCode) return;
+
+    try {
+      const response = await fetch(`/auth/api/countries/${countryCode}/states/${stateCode}/cities`);
+      const cities = await response.json();
+      citySelect.innerHTML = '<option value="">Select City</option>';
+      cities.forEach(c => {
+        const option = document.createElement('option');
+        option.value = c.id;
+        option.textContent = c.name;
+        citySelect.appendChild(option);
+      });
+      citySelect.disabled = false;
+    } catch (error) {
+      console.error('Error loading cities:', error);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    loadCountries();
+    const countrySelect = document.getElementById('country');
+    const stateSelect = document.getElementById('state');
+
+    countrySelect?.addEventListener('change', function () {
+      loadStates(this.value);
+    });
+    stateSelect?.addEventListener('change', function () {
+      const countryVal = countrySelect.value;
+      if (countryVal) loadCities(countryVal, this.value);
+    });
+  });
+</script>
+
+<script>
+  // =========================
+  // Fetch Lat/Lon via Nominatim
+  // =========================
+  async function getLatLon(city, state, country) {
+    const query = `${city}, ${state}, ${country}`;
+    const url = `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(query)}`;
+
+    try {
+      const response = await fetch(url, {
+        headers: {
+          "User-Agent": "aprycot-app (your@email.com)" // Required by Nominatim
+        }
+      });
+
+      const data = await response.json();
+
+      if (data.length > 0) {
+        const latitude = data[0].lat;
+        const longitude = data[0].lon;
+
+        console.log(`✅ Found: ${query}`);
+        console.log("Latitude:", latitude, "Longitude:", longitude);
+
+        // update hidden fields
+        document.getElementById('latitude').value = latitude;
+        document.getElementById('longitude').value = longitude;
+      } else {
+        console.warn("❌ Location not found");
+        document.getElementById('latitude').value = '';
+        document.getElementById('longitude').value = '';
+      }
+    } catch (error) {
+      console.error("⚠️ Error fetching location:", error);
+    }
+  }
+
+  // =========================
+  // Trigger geocoding after selecting City
+  // =========================
+  document.addEventListener('DOMContentLoaded', function () {
+    const countrySelect = document.getElementById('country');
+    const stateSelect = document.getElementById('state');
+    const citySelect = document.getElementById('city');
+
+    citySelect?.addEventListener('change', function () {
+      const country = countrySelect.options[countrySelect.selectedIndex]?.text || "";
+      const state = stateSelect.options[stateSelect.selectedIndex]?.text || "";
+      const city = citySelect.options[citySelect.selectedIndex]?.text || "";
+
+      if (country && state && city) {
+        getLatLon(city, state, country);
+      }
+    });
+  });
+</script>
+{% endblock %}

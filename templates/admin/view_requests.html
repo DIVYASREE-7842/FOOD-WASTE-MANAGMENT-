@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Request from {{ user.first_name }} as {{ user.role }}</h2>
+
+<div class="profile-card text-center">
+  <!-- Profile Photo -->
+  {% if user.user_profile %}
+    <img src="{{ url_for('static', filename='uploads/' ~ user.user_profile) }}" 
+         alt="Profile Photo" class="profile-photo" style="width: 200px;height:200px;">
+  {% endif %}
+
+  <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+  <p class="text-muted">Role(s): {{ role|join(', ') }}</p>
+
+  <hr>
+
+  <div class="row text-left">
+    <div class="col-md-6">
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <p><strong>Phone:</strong> {{ user.phone }}</p>
+      <p><strong>Country:</strong> {{ country_name }}</p>
+      <p><strong>State:</strong> {{ state_name }}</p>
+      <p><strong>City:</strong> {{ city_name }}</p>
+    </div>
+
+    <div class="col-md-6">
+      {% if 'Donor' in role %}
+        <h4>Donor Profile</h4>
+        {% if donor_profile %}
+          <p><strong>Organization Name:</strong> {{ donor_profile.org_name }}</p>
+          <p><strong>Organization Type:</strong> {{ donor_profile.org_type }}</p>
+          {% if donor_profile.licience %}
+            <p><strong>License Proof:</strong></p>
+            {% if donor_profile.licience.endswith('.pdf') %}
+              <embed src="{{ url_for('static', filename='uploads/' ~ donor_profile.licience) }}" type="application/pdf" width="100%" height="200px"/>
+            {% else %}
+              <img src="{{ url_for('static', filename='uploads/' ~ donor_profile.licience) }}" class="img-fluid rounded">
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      {% endif %}
+
+      {% if 'Recipient' in role %}
+        <h4>Recipient Profile</h4>
+        {% if recipient_profile %}
+          <p><strong>Organization Name:</strong> {{ recipient_profile.org_name }}</p>
+          <p><strong>Organization Type:</strong> {{ recipient_profile.org_type }}</p>
+          {% if recipient_profile.tax_proof %}
+            <p><strong>Tax Proof:</strong></p>
+            {% if recipient_profile.tax_proof.endswith('.pdf') %}
+              <embed src="{{ url_for('static', filename='uploads/' ~ recipient_profile.tax_proof) }}" type="application/pdf" width="100%" height="200px"/>
+            {% else %}
+              <img src="{{ url_for('static', filename='uploads/' ~ recipient_profile.tax_proof) }}" class="img-fluid rounded">
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<h3>User Proofs</h3>
+<div class="row">
+  {% for proof in proofs %}
+    <div class="col-md-4 mb-3">
+      <div class="card shadow-sm">
+        <div class="card-body text-center">
+          <p><strong>{{ proof.file_name }}</strong> ({{ proof.status }})</p>
+
+          {% if proof.file_name.endswith('.jpg') or proof.file_name.endswith('.jpeg') or proof.file_name.endswith('.png') %}
+            <img src="{{ url_for('static', filename='uploads/' ~ proof.file_name) }}" 
+                 alt="Proof Image" class="img-fluid rounded">
+          {% elif proof.file_name.endswith('.pdf') %}
+            <embed src="{{ url_for('static', filename='uploads/' ~ proof.file_name) }}" 
+                   type="application/pdf" width="100%" height="200px" />
+            <p><a href="{{ url_for('static', filename='uploads/' ~ proof.file_name) }}" target="_blank">Open PDF</a></p>
+          {% else %}
+            <p><a href="{{ url_for('static', filename='uploads/' ~ proof.file_name) }}" target="_blank">Download File</a></p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <p>No proofs uploaded</p>
+  {% endfor %}
+</div>
+
+<hr>
+
+<hr>
+
+<!-- Approve / Reject buttons -->
+<form action="{{ url_for('admin.approve_request', request_id=request_data.request_id) }}" method="post" style="display:inline;">
+    <button type="submit" class="btn btn-success">Approve</button>
+</form>
+
+<form action="{{ url_for('admin.reject_request', request_id=request_data.request_id) }}" method="post" style="display:inline;">
+    <button type="submit" class="btn btn-danger">Reject</button>
+</form>
+
+<hr>
+
+<!-- Send Email Toggle Button -->
+<button id="toggleEmailForm" class="btn btn-primary mb-3">Send Email</button>
+
+<!-- Send Email Form (Hidden by default) -->
+<div id="emailForm" style="display:none;">
+    <form action="{{ url_for('admin.view_user_requests', user_id=user.user_id) }}" method="post">
+        <div class="mb-3">
+            <label for="subject" class="form-label">Subject</label>
+            <input type="text" class="form-control" id="subject" name="subject" required>
+        </div>
+        <div class="mb-3">
+            <label for="body" class="form-label">Message</label>
+            <textarea class="form-control" id="body" name="body" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Send Email</button>
+        <button type="button" id="cancelEmailForm" class="btn btn-secondary">Cancel</button>
+    </form>
+</div>
+
+<!-- JS to toggle form -->
+<script>
+    const toggleBtn = document.getElementById('toggleEmailForm');
+    const emailForm = document.getElementById('emailForm');
+    const cancelBtn = document.getElementById('cancelEmailForm');
+
+    toggleBtn.addEventListener('click', () => {
+        emailForm.style.display = emailForm.style.display === 'none' ? 'block' : 'none';
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        emailForm.style.display = 'none';
+    });
+</script>
+
+{% endblock %}

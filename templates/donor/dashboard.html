@@ -1,0 +1,726 @@
+{% extends 'base.html' %}
+{% block title %}Donor Dashboard{% endblock %}
+{% block content %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<style>
+  /* Custom theme colors */
+:root {
+  --primary-color: #ee9d4d7c;
+  --secondary-color: #fcac68;
+  --dark-color: #2c3e50;
+  --light-color: #f4f7fa;
+  --text-dark: #333;
+  --text-medium: #555;
+  --text-light: #818999;
+  --transition-speed: 0.4s;
+}
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Dashboard container */
+.donor.dashboard {
+  margin: 0 auto;
+}
+.donor.dashboard h2 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: var(--dark-color);
+  background: linear-gradient(135deg, var(--dark-color) 0%, var(--secondary-color) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Become Recipient Card */
+.card.recipient {
+  margin-bottom: 2rem;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f3f4f6;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(135deg, white 0%, var(--primary-color) 30%, var(--secondary-color) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-content {
+  flex: 1;
+  max-width: 32rem;
+  position: relative;
+  z-index: 10;
+}
+.card-content h3 {
+  color: white;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+.card-content p {
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 1.5rem;
+  line-height: 1.625;
+}
+.card.card.recipient .card-icon {
+  position: absolute;
+  top: 50%; /* vertically center */
+  right: 10rem; /* distance from right edge */
+  transform: translateY(-50%);
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  background-color: rgba(255,255,255,0.2);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  color: white;
+  z-index: 1;
+}
+@media (min-width: 1024px) {
+  .card-icon {
+    display: flex;
+  }
+}
+
+.btn-rc {
+  background-color: white;
+  color: #374151;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.btn-rc:hover {
+  background-color: #f9fafb;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  color: #374151;
+  text-decoration: none;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+@media (min-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.stat-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  background-color: white;
+  padding: 1.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  transform: translateY(0);
+  border: 1px solid #f3f4f6;
+  text-align: center;
+  background: linear-gradient(135deg, white 0%, rgba(252, 172, 104, 0.15) 100%);
+  border-left: 4px solid var(--secondary-color);
+}
+.stat-card:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+}
+.stat-card.clickable-card {
+  cursor: pointer;
+  border-left: 4px solid #ef4444;
+  background: linear-gradient(135deg, white 0%, rgba(239, 68, 68, 0.15) 100%);
+}
+.stat-card.clickable-card:hover {
+  transform: translateY(-4px) scale(1.02);
+}
+.stat-card i {
+  margin-bottom: 1rem;
+  display: block;
+}
+.stat-card h4, .stat-card h6 {
+  margin-bottom: 0.5rem;
+  color: #6b7280;
+}
+.stat-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+}
+.stat-card p {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+}
+.stat-card a{
+  text-decoration: none;
+}
+/* Icon colors */
+.text-primary {
+  color: var(--secondary-color) !important;
+}
+.text-success {
+  color: #22c55e !important;
+}
+.text-danger {
+  color: #ef4444 !important;
+}
+.text-dark {
+  color: var(--text-dark) !important;
+}
+
+/* Icon spacing utilities */
+.mb-2 {
+  margin-bottom: 0.5rem !important;
+}
+.mb-3 {
+  margin-bottom: 1rem !important;
+}
+.me-2 {
+  margin-right: 0.5rem !important;
+}
+.fw-bold {
+  font-weight: 700 !important;
+}
+
+/* Charts Grid */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+@media (min-width: 1024px) {
+  .charts-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.chart-card {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f3f4f6;
+  background: linear-gradient(135deg, white 0%, var(--light-color) 100%);
+}
+.chart-title {
+  margin-bottom: 1.5rem;
+  color: var(--text-dark);
+}
+.chart-container {
+  height: 20rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.chart-placeholder {
+  text-align: center;
+  color: var(--text-light);
+}
+.chart-placeholder i {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+/* Map Card */
+.map-card {
+  background-color: white;
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f3f4f6;
+  background: linear-gradient(135deg, white 0%, var(--light-color) 100%);
+}
+.map-card h3 {
+  margin-bottom: 1.5rem;
+  color: var(--text-dark);
+}
+#map {
+  height: 24rem;
+  border-radius: 0.75rem;
+  border: 2px dashed #d1d5db;
+  background-color: var(--light-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.map-placeholder {
+  text-align: center;
+  color: var(--text-light);
+  padding: 10px;
+}
+.map-placeholder i {
+  display: block;
+  margin-bottom: 1rem;
+  padding:10px;
+}
+
+/* Decorative elements for recipient card */
+.card.recipient::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10rem;
+  height: 10rem;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  margin-right: -5rem;
+  margin-top: -5rem;
+}
+.card.recipient::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 8rem;
+  height: 8rem;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  margin-left: -4rem;
+  margin-bottom: -4rem;
+}
+.donor-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(6px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+    z-index: 9999;
+    padding: 20px;
+  }
+
+  .donor-popup-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Fullscreen popup card */
+  .donor-popup-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    width: 95%;
+    max-width: 1100px;
+    height: auto;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.95);
+    opacity: 0;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+  }
+
+  .donor-popup-overlay.active .donor-popup-card {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  .popup-header {
+    background:var(--secondary-color);
+    color:var(--dark-color);
+    padding: 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .popup-header h2 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 24px;
+  }
+
+  .close-btn {
+    background: rgba(255, 255, 255, 0.2);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 18px;
+  }
+
+  .close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  .popup-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+  }
+
+  th,
+  td {
+    padding: 16px 20px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  th {
+    background-color: #f8f9fa;
+    color: #2f3542;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+  }
+
+  tr:hover {
+    background-color: #f1f2f6;
+  }
+.profile-photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #ddd;
+   
+  }
+  /* end popup */
+
+</style>
+
+<div class="donor dashboard">
+  <h2>Donor Dashboard</h2>
+  {% if show_become_recipient %}
+  <div class="card recipient">
+    
+    <div class="card-content">
+      <h3>Become a Recipient</h3>
+      <p>We are here to support you during challenging times. Our network of donors is ready to provide assistance and
+        care. Reach out to us to learn how our program can help you and your family.</p>
+      <a href="{{url_for('donor.become_recipient')}}" class="btn btn-rc">Become Recipient <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <div class="card-icon">
+      <i class="fas fa-hands-helping"></i>
+    </div>
+        
+  </div>
+  {% endif %}
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <a href="{{url_for('donor.my_donations')}}">
+      <i class="fa fa-hand-holding-heart fa-3x text-primary mb-3"></i>
+      <h4>Total Donations</h4>
+      <p>{{ total_donations }}</p>
+      </a>
+    </div>
+
+    <div class="stat-card">
+      <i class="fa fa-utensils fa-3x text-success mb-3"></i>
+      <h4>Total Food Saved</h4>
+      <p>{{ total_food_saved }}</p>
+    </div>
+
+    <div class="stat-card" id="showCardBtn">
+       <i class="fas fa-map-marker-alt fa-3x text-danger"></i>
+      <h4>Nearby Recipients</h4>
+      <p>{{ nearby_recipients_count or 0 }}</p>
+    </div>
+    <div class="donor-popup-overlay" id="popupOverlay">
+      <div class="donor-popup-card">
+        <div class="popup-header">
+         
+          <div class="close-btn ms-auto" id="closeBtn">
+            <i class="fas fa-times"></i>
+          </div>
+        </div>
+
+        <div class="popup-content">
+          <table>
+            <thead>
+              <tr>
+                <th>Photo</th>
+                <th>Name</th>
+                <th>City</th>
+                <th>Distance (km)</th>
+              </tr>
+            </thead>
+            
+            <tbody>
+              {% for d in nearby_recipients %}
+              <tr>
+                <td>
+                  <img
+                    src="{{ url_for('static', filename='uploads/' ~ (d.user_profile if d.user_profile else 'default.png')) }}"
+                    alt="Profile Photo" class="profile-photo">
+                </td>
+                <td>{{ d.first_name }} {{ d.last_name }}</td>
+                <td>{{ d.city }}</td>
+                <td>
+                  {% if d.distance_km %}
+                  {{ d.distance_km }} km
+                  {% else %}
+                  N/A
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+      
+    <div class="stat-card">
+      <i class="fa fa-users fa-3x text-danger mb-3"></i>
+      <h4>Active Recipients</h4>
+      <p>{{ active_recipients }}</p>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="charts-grid">
+    <div class="chart-card">
+      <h3 class="chart-title">Donations Over Time</h3>
+      <div class="chart-container">
+        <canvas id="donationChart"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <h3 class="chart-title">Donation Category</h3>
+      <div class="chart-container">
+        <canvas id="categoryChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Map -->
+  <div class="card map-card">
+    <h3>Nearby Recipients ({{ recipients|length }})</h3>
+    <div id="map"></div>
+  </div>
+</div>
+
+<script>
+  const donor = {{ donor| tojson | safe }};
+  const recipients = {{ recipients| tojson | safe }};
+  const donation_labels = {{ donation_labels| tojson | safe }};
+  const donation_values = {{ donation_values| tojson | safe }};
+  const category_labels = {{ category_labels| tojson | safe }};
+  const category_values = {{ category_values| tojson | safe }};
+
+  new Chart(document.getElementById('donationChart'), {
+    type: 'line',
+    data: {
+      labels: donation_labels,
+      datasets: [{
+        label: 'Donations',
+        data: donation_values,
+        borderColor: '#4361ee',
+        fill: false,
+        tension: 0.3
+      }]
+    }
+  });
+
+  new Chart(document.getElementById('categoryChart'), {
+    type: 'doughnut',
+    data: {
+      labels: category_labels,
+      datasets: [{
+        data: category_values,
+        backgroundColor: ['#4361ee', '#4cc9f0', '#f72585', '#4895ef']
+      }]
+    }
+  });
+
+  const map = L.map('map').setView([donor.latitude || 12.9716, donor.longitude || 77.5946], 11);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  if (donor.latitude && donor.longitude) {
+    L.marker([donor.latitude, donor.longitude], {
+      icon: L.icon({ iconUrl: 'https://cdn-icons-png.flaticon.com/512/149/149071.png', iconSize: [30, 30] })
+    }).addTo(map).bindPopup("You (Donor)").openPopup();
+  }
+  recipients.forEach(r => {
+    if (r.latitude && r.longitude) {
+      L.marker([r.latitude, r.longitude]).addTo(map)
+        .bindPopup(`${r.name} (${r.distance} km away)`);
+    }
+  });
+</script>
+
+<!-- ############# popup card ############ -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const showCardBtn = document.getElementById('showCardBtn');
+    const popupOverlay = document.getElementById('popupOverlay');
+    const closeBtn = document.getElementById('closeBtn');
+
+    // Show the fullscreen popup
+    showCardBtn.addEventListener('click', function () {
+      popupOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden'; // Prevent scrolling
+    });
+
+    // Hide the fullscreen popup
+    closeBtn.addEventListener('click', function () {
+      popupOverlay.classList.remove('active');
+      document.body.style.overflow = ''; // Re-enable scrolling
+    });
+
+    // Hide the popup if user clicks outside the card
+    popupOverlay.addEventListener('click', function (e) {
+      if (e.target === popupOverlay) {
+        popupOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && popupOverlay.classList.contains('active')) {
+        popupOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  });
+</script>
+<!-- ajax -->
+ <script>
+  let donationChart, foodChart, savedChart;
+
+  function loadDashboard(period = "daily") {
+    fetch(`/admin/dashboard?period=${period}`)
+      .then(res => res.json())
+      .then(data => {
+        // Stats
+        document.getElementById('totalDonors').innerText = data.total_donors;
+        document.getElementById('totalRecipients').innerText = data.total_recipients;
+        document.getElementById('activeDonors').innerText = data.active_donors;
+        document.getElementById('activeRecipients').innerText = data.active_recipients;
+
+        // Active Donors
+        const donorList = document.getElementById('donorList');
+        donorList.innerHTML = '';
+        if(data.active_donor_list.length){
+          data.active_donor_list.forEach(d => {
+            const li = document.createElement('li');
+            li.textContent = `${d.first_name} ${d.last_name}`;
+            donorList.appendChild(li);
+          });
+        } else donorList.innerHTML = '<li class="text-muted">No active donors</li>';
+
+        // Active Recipients
+        const recipientList = document.getElementById('recipientList');
+        recipientList.innerHTML = '';
+        if(data.active_recipient_list.length){
+          data.active_recipient_list.forEach(r => {
+            const li = document.createElement('li');
+            li.textContent = `${r.first_name} ${r.last_name}`;
+            recipientList.appendChild(li);
+          });
+        } else recipientList.innerHTML = '<li class="text-muted">No active recipients</li>';
+
+        // Pending Requests
+        const tbody = document.querySelector('#pendingRequestsTable tbody');
+        tbody.innerHTML = '';
+        if(data.pending_requests.length){
+          data.pending_requests.forEach(req => {
+            tbody.innerHTML += `
+              <tr>
+                <td>${req.first_name} ${req.last_name}</td>
+                <td>${req.message}</td>
+                <td>${req.created_at}</td>
+                <td><a href="/admin/view_request/${req.request_id}" class="btn btn-info btn-sm">View</a></td>
+                <td>
+                  <form action="/admin/approve_request/${req.request_id}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                  </form>
+                  <form action="/admin/reject_request/${req.request_id}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                  </form>
+                </td>
+              </tr>`;
+          });
+        } else tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No pending requests</td></tr>';
+
+        // Donations Chart
+        if(donationChart) donationChart.destroy();
+        donationChart = new Chart(document.getElementById('donationChart'), {
+          type:'bar',
+          data:{ labels:data.donation_labels, datasets:[{ label:'Number of Donations', data:data.donation_values, backgroundColor:'rgba(67,97,238,0.6)', borderColor:'#4361ee', borderWidth:1 }] },
+          options:{ responsive:true, scales:{ y:{ beginAtZero:true, title:{ display:true,text:'Donations' }}}}
+        });
+
+        // Food Chart
+        if(foodChart) foodChart.destroy();
+        foodChart = new Chart(document.getElementById('foodChart'), {
+          type:'doughnut',
+          data:{ labels:data.food_labels, datasets:[{ data:data.food_values, backgroundColor:['#4361ee','#3a0ca3','#f72585','#4cc9f0','#7209b7'] }] },
+          options:{ responsive:true }
+        });
+
+        // Saved Chart
+        if(savedChart) savedChart.destroy();
+        savedChart = new Chart(document.getElementById('savedChart'), {
+          type:'bar',
+          data:{ labels:data.saved_labels, datasets:[{ label:'Food Saved (Kg)', data:data.saved_values, backgroundColor:'rgba(76,201,240,0.6)', borderColor:'#4cc9f0', borderWidth:1 }] },
+          options:{ responsive:true, scales:{ y:{ beginAtZero:true, title:{ display:true,text:'Kg Saved' }}}}
+        });
+      });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    loadDashboard();
+
+    document.querySelectorAll('.period-btn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        loadDashboard(btn.dataset.period);
+      });
+    });
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% block title %}All Notifications{% endblock %}
+
+{% block content %}
+<style>
+  :root {
+  --primary-color: #ee9d4d7c;
+  --secondary-color: #fcac68;
+  --dark-color: #2c3e50;
+  --light-color: #f4f7fa;
+  --text-dark: #333;
+  --text-medium: #555;
+  --text-light: #818999;
+  --transition-speed: 0.4s;
+}
+
+/* Container styling */
+.list-group {
+  /* display: flex; */
+  /* flex-direction: column; */
+  gap: 1.5rem;
+  /* align-items: center; */
+  background: white;
+  border-radius: 12px;
+  padding: 1rem 0.5rem;
+  box-shadow: 0 2px 14px #ee9d4d3a;
+}
+
+/* Notification card styling  */
+.list-group-item {
+  background: var(--light-color);
+  border-left: 5px solid var(--secondary-color);
+  border-bottom:5px solid var(--secondary-color) ;
+  border-radius: 12px;
+  min-width: 340px;
+  max-width: 880px;
+  width: 100%;
+  display: flex;
+  /* flex-direction: row;
+  align-items: center;
+  justify-content: center; */
+  margin-bottom: 0 !important; 
+  transition: box-shadow var(--transition-speed), transform var(--transition-speed);
+   text-align: center;
+  position: relative;
+  padding: 1.5rem 2rem;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 8px #fcac681a;
+  cursor: pointer;
+  animation: fadeInNotification var(--transition-speed) ease;
+} 
+
+@keyframes fadeInNotification {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.list-group-item:hover {
+  box-shadow: 0 4px 20px #2c3e5070;
+  transform: translateY(-3px) scale(1.01);
+}
+
+/* Bold unread notification */
+.list-group-item.fw-bold {
+  font-weight: 700 !important;
+  background: var(--secondary-color);
+  border: 2px solid var(--primary-color);
+}
+
+/* Center content inside .ms-2.me-auto */
+/* .ms-2.me-auto {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+} */
+
+/* Notification title/link styling */
+.list-group-item .text-dark {
+  color: var(--dark-color) !important;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+/* Notification date styling */
+.list-group-item .text-muted {
+  color: var(--text-light) !important;
+  font-size: 0.88rem;
+  margin-top: 0.5em;
+}
+
+/* Badge (Read/Unread) custom colors */
+.badge.bg-secondary {
+  background: #818999;
+  color: #fff;
+  font-size: 0.93em;
+  /* padding: 0.57em 1.15em; */
+  border-radius: 8px;
+  box-shadow: 0 1px 7px #81899930;
+  position: absolute;
+  right: 1.5rem;
+  top: 1.65rem;
+}
+
+.badge.bg-danger {
+  background: #ed953c;
+  color: #fff;
+  font-size: 0.90em;
+  padding:0.1em 0.7em 0.4em 0.4em;
+  border-radius: 8px;
+  box-shadow: 0 1px 7px #ee9d4d33;
+  position: absolute;
+  right: 1.5rem;
+  top: 1.65rem;
+}
+
+</style>
+<div class="container my-4">
+  <div class="d-flex align-items-end">
+    <h3 class="mb-4"><i class="fa fa-bell"></i> All Notifications</h3>
+    <a href="{{url_for('donor.dashboard')}}" class="btn btn-outline-dark  ms-auto mb-3">
+      Back to Dashboard
+    </a>
+  </div>
+  {% if combined %}
+  <ul class="list-group">
+    {% for item in combined %}
+    <li class="list-group-item d-flex justify-content-between align-items-start {% if not item.is_read %}fw-bold{% endif %}">
+      
+      <!-- Message -->
+      <div class="ms-2 me-auto">
+        {% if item.type == 'notification' %}
+          <a class="text-decoration-none text-dark"
+             href="{{ url_for('donor.notification_detail', notif_id=item.id) }}">
+            {{ item.message }}
+          </a>
+        {% elif item.type == 'request' %}
+          <a class="text-decoration-none text-dark"
+             href="{{ url_for('donor.notification_detail', notif_id=item.id) }}">
+            {{ item.message }}
+          </a>
+        {% endif %}
+
+        <div class="text-muted small">
+          {{ item.created_at.strftime('%d %b %Y, %I:%M %p') }}
+        </div>
+      </div>
+
+      <!-- Status Badge -->
+      {% if item.is_read %}
+        <span class="badge bg-secondary">Read</span>
+      {% else %}
+        <span class="badge bg-danger">Unread</span>
+      {% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <div class="alert alert-info">You have no notifications.</div>
+  {% endif %}
+</div>
+{% endblock %}
